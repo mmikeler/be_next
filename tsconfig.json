@@ -36,9 +36,9 @@
     "**/*.jsx",
     ".next/types/**/*.ts",
     "c/ui/menu.js",
-    "app/page/[id]",
+    "app/minisite/[id]",
     "c/page.tsx",
-    "store/store.js"
+    "store/store.ts"
   ],
   "exclude": [
     "node_modules"

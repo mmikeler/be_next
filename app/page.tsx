@@ -1,6 +1,7 @@
 "use client"
 
 import Topbar from '@/c/topbar'
+import Link from 'next/dist/client/link'
 import { motion } from "framer-motion"
 
 export default function Home() {
@@ -14,50 +15,14 @@ export default function Home() {
           initial={{ opacity: 0, top: 30 }}
           animate={{ opacity: 1, top: 0 }}
           className='m-auto p-3 relative'>
-          <h1 className='text-center text-5xl'>&quot;Be Next&quot;</h1>
-          <div className="text-center text-md text-stone-500">Шаблон приложения полного цикла</div>
-          <p className='text-center mt-5 text-sm'>Включает в себя регистрацию, авторизацию и CRUD базы данных.</p>
-          <table className='mt-10 w-full text-center'>
-            <tbody>
-              <tr>
-                <td className='w-1/2'>NEXT.js</td>
-                <td>Основной фреймворк</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>NEXT Auth</td>
-                <td>Авторизация / Регистрация</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>Prisma</td>
-                <td>Менеджер БД</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>SQLight</td>
-                <td>База данных</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>Zustand</td>
-                <td>Управление состоянием</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>Tailwind</td>
-                <td>Стилизация</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>Axios</td>
-                <td>Межсайтовые запросы</td>
-              </tr>
-              <tr>
-                <td className='w-1/2'>FramerMotion</td>
-                <td>Анимация компонентов</td>
-              </tr>
-            </tbody>
-          </table>
+          <h1 className='text-center text-5xl'>&quot;Минивэб&quot;</h1>
+          <div className="text-center text-md text-stone-500">Бесплатный элементарный конструктор функциональных сайтов без использовани шаблонов.</div>
+          <p className='text-center mt-5 text-sm'></p>
+
         </motion.div>
 
         <div className="fixed bottom-0 border-t border-gray-100 left-0 flex h-auto w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <div className="p-3">Bottombar</div>
-          <div className="p-3"><a href={'/page'}>Pages</a></div>
+          <div className="p-3"><Link href="/minisite/1">Пример сайта</Link></div>
         </div>
 
       </main>

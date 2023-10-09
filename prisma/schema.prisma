@@ -11,26 +11,25 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  role      String   @default("User")
-  pages     Page[]
-  forms     Form[]
+  id      Int        @id @default(autoincrement())
+  email   String     @unique
+  name    String?
+  created DateTime   @default(now())
+  role    String     @default("User")
+  ya_disk String?
+  pages   Minisite[]
+  forms   Form[]
 }
 
-model Page {
+model Minisite {
   id        Int       @id @default(autoincrement())
-  title     String    @default("Новая запись")
+  title     String    @default("Новый сайт")
   created   DateTime  @default(now())
   expired   DateTime?
   content   String?
   published Boolean   @default(false)
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  Int
-  views     Int       @default(0)
-  likes     Int       @default(0)
+  author    User      @relation(fields: [authorId], references: [email])
+  authorId  String
 }
 
 model Form {
@@ -38,9 +37,8 @@ model Form {
   title     String
   content   String?
   published Boolean   @default(false)
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  Int
-  results   String?
+  author    User      @relation(fields: [authorId], references: [email])
+  authorId  String
   comment   Comment[]
 }
 

@@ -1,13 +1,6 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'avatars.yandex.net',
-        port: '',
-        pathname: '**',
-      },
-    ],
+    domains: ['downloader.disk.yandex.ru', 'avatars.yandex.net']
   },
 }

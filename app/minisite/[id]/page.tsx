@@ -1,4 +1,4 @@
-import { PAGE } from "@/c/page";
+import Main from "@/c/constructor/main";
 import { PrismaClient } from "@prisma/client";
 import type { Metadata } from 'next'
 const prisma = new PrismaClient()
@@ -17,34 +17,24 @@ export default async function Page({ params }: { params: any }) {
 
   return (
     <>
-      <PAGE page={page} />
+      <Main
+        siteid={params.id}
+        author={page.author.email}
+        initialContent={page.content || JSON.stringify({})} />
     </>
   )
 }
 
 async function getPage(id: number) {
 
-  const page = await prisma.page.findUnique({
+  const page = await prisma.minisite.findUnique({
     where: { id: Number(id) },
     include: {
       author: {
-        select: { name: true }
+        select: { email: true }
       }
     }
   })
-
-  if (page) {
-    const updatePage = await prisma.page.update({
-      where: {
-        id: Number(id),
-      },
-      data: {
-        views: {
-          increment: 1
-        },
-      },
-    })
-  }
 
   return page
 }

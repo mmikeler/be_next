@@ -21,6 +21,12 @@ export default function Aside(params: any) {
           path: '/profile/person',
           title: 'Профиль'
         }} />
+
+        <Aside__Item options={{
+          icon: 'web',
+          path: '/profile/sites',
+          title: 'Минисайты'
+        }} />
       </Aside__Widget>
 
     </aside>

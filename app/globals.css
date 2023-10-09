@@ -52,10 +52,100 @@ body {
     'opsz' 24
 }
 
-ul>li>a {
-  color: blue;
-}
-
 a:hover {
   text-decoration: underline;
+}
+
+.scrollbar {
+  /* плашка-бегунок и фон */
+  scrollbar-color: rgb(245 158 11) rgb(245 245 244);
+  scrollbar-width: thin;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+  /* в основном для вертикальных полос прокрутки */
+  height: 5px;
+  /* в основном для горизонтальных полос прокрутки */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  /* плашка-бегунок */
+  background: rgb(245 158 11);
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  /* фон */
+  background: rgb(245 245 244);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.mainwrapper [contenteditable='false'] {
+  cursor: move;
+}
+
+.mainwrapper [contenteditable='false'] {
+  cursor: text;
+}
+
+.mainwrapper [contenteditable='true'] {
+  cursor: text;
+  outline: none;
+  caret-color: red;
+}
+
+/* 
+  Checkbox Switcher
+*/
+input[type=checkbox] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.checkbox-label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 50px;
+  height: 25px;
+  background: grey;
+  display: block;
+  border-radius: 20px;
+  position: relative;
+}
+
+.checkbox-label:after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  width: 21px;
+  height: 21px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked+.checkbox-label {
+  background: #84cc16;
+}
+
+input:checked+.checkbox-label:after {
+  left: calc(100% - 4px);
+  transform: translateX(-100%);
+}
+
+.checkbox-label:active:after {
+  width: 21px;
 }

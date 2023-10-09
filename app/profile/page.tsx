@@ -9,7 +9,3 @@ export default function Profile__Page(props: any) {
     </>
   )
 }
-
-export function getStaticProp(params: any) {
-
-}

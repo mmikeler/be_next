@@ -14,7 +14,7 @@ export default function LoginBtn() {
     return (
       <>
         <div onClick={() => setOpen(!open)} className="flex cursor-pointer">
-          <Image className="rounded-full" src={session.user?.image} alt="miniweb" width={40} height={40} />
+          <Image className="rounded-full" src={session.user?.image || ''} alt="miniweb" width={40} height={40} />
         </div>
 
         {open &&
@@ -39,6 +39,6 @@ export function Avatar(params: any) {
   const { data: session } = useSession()
   return (
     session &&
-    <Image fill src={session.user?.image} alt="" />
+    <Image fill src={session.user?.image || ''} alt="" />
   )
 }
