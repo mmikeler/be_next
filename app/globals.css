@@ -91,19 +91,13 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.mainwrapper [contenteditable='false'] {
-  cursor: move;
-}
-
-.mainwrapper [contenteditable='false'] {
-  cursor: text;
-}
-
 .mainwrapper [contenteditable='true'] {
   cursor: text;
   outline: none;
   caret-color: red;
 }
+
+a
 
 /* 
   Checkbox Switcher

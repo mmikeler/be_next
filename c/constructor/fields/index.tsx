@@ -45,3 +45,25 @@ export function Colorpicker({ styleProp, label }: {
     </>
   )
 }
+
+export function Link_(params: any) {
+  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const layer = useStore((state: any) => state.layers[activeLayerID])
+  const action = useStore((state: any) => state.updateLayer)
+
+  const onBlur = (e: any) => {
+    action({
+      ...layer, link: {
+        ...layer.link, href: e.target.value
+      }
+    })
+  }
+
+  return (
+    <textarea
+      onBlur={onBlur}
+      className="w-full text-slate-700 p-2 scrollbar rounded"
+      defaultValue={layer?.link?.href || ''}>
+    </textarea>
+  )
+}

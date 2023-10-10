@@ -5,6 +5,7 @@ import { Position } from "../fields/position"
 import { Colors } from "../fields/colors"
 import { Border } from "../fields/border"
 import { FontField } from "../fields/text"
+import { Link_ } from "../fields"
 
 
 export function Panel() {
@@ -13,7 +14,9 @@ export function Panel() {
   const action = useStore((state: any) => state.deleteLayer)
 
   return (
-    <div className="w-3/12 h-screen bg-slate-700 text-stone-100 text-xs pb-20">
+    <div
+      style={{ width: 'max(25%, 250px)' }}
+      className="w-3/12 h-screen bg-slate-700 text-stone-100 text-xs pb-20">
       <div className="mb-2 px-3 py-1 text-sm border-b-2 border-slate-500">{L ? L.title : 'Выберите слой'}</div>
 
       {activeLayer &&
@@ -26,6 +29,9 @@ export function Panel() {
           </Panel__Widget>
           <Panel__Widget title="Обводка">
             <Border />
+          </Panel__Widget>
+          <Panel__Widget title="Ссылка">
+            <Link_ />
           </Panel__Widget>
 
           <AD_FIELDS layerType={L.layerType} />

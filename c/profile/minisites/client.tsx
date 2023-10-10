@@ -70,6 +70,7 @@ export function parseProp(str: String) {
 
 export function LayerComponent(props: any) {
   const layer = props.data
+  const author: string = props.author
   const activeLayer = useStore((state: any) => state.activeLayer)
   const action = useStore((state: any) => state.updateLayer)
   const [edit, setEdit] = useState(false);
@@ -80,24 +81,51 @@ export function LayerComponent(props: any) {
   }
 
   return (
-    <div
-      id={layer.id}
-      style={layer.style}
-    >
-      {layer.layerType === 'text' &&
-        <span
-          onClick={() => setEdit(true)}
-          className={layer.fontClass}
-          onBlur={saveChange}
-          contentEditable={activeLayer === layer.id}
-          dangerouslySetInnerHTML={{ __html: layer.innerText }}>
-        </span>}
+    <>
+      <Wrapper layer={layer} edit={props.edit}>
+        {layer.layerType === 'text' &&
+          <span
+            onClick={() => setEdit(true)}
+            className={layer.fontClass}
+            onBlur={saveChange}
+            contentEditable={activeLayer === layer.id && edit}
+            dangerouslySetInnerHTML={{ __html: layer.innerText }}>
+          </span>}
 
-      {layer.layerType === 'image' &&
-        <MS_Image path={layer.src} />
-      }
-    </div>
+        {layer.layerType === 'image' &&
+          <MS_Image path={layer.src} author={author} />
+        }
+      </Wrapper>
+    </>
   )
+}
+
+function Wrapper(params: any) {
+  const layer = params.layer
+
+  if (layer.link?.href.length > 0 && !params.edit) {
+    return (
+      <Link
+        id={layer.id}
+        style={layer.style}
+        target="_blank"
+        className="cursor-pointer"
+        rel="noopener noreferrer"
+        href={layer.link.href || ''}>
+        {params.children}
+      </Link>
+    )
+  }
+  else {
+    return (
+      <div
+        id={layer.id}
+        style={layer.style}
+      >
+        {params.children}
+      </div>
+    )
+  }
 }
 
 /*

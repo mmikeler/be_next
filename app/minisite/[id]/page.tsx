@@ -6,6 +6,7 @@ const prisma = new PrismaClient()
 export const metadata: Metadata = {
   title: 'Miniweb',
   description: 'Generated Mini Website',
+  referrer: 'no-referrer'
 }
 
 export default async function Page({ params }: { params: any }) {

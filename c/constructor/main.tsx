@@ -34,7 +34,7 @@ export default function Main<ReactNode>(
     const initialProps = JSON.parse(initialContent)
     action('siteid', siteid)
     action('author', author)
-    action('constructorSize', initialProps.constructorSize || { width: '360px', height: '800px' })
+    action('constructor_size', initialProps.constructor_size || { width: '360px', height: '800px' })
     action('fonts', initialProps.fonts || {})
     action('layers', initialProps.layers || {})
     localStorage.setItem('constructor', '1')
@@ -78,6 +78,7 @@ export default function Main<ReactNode>(
       <div className="flex">
         {editSite ? <Constructor__Aside /> : null}
         <section
+          id='mw__constructor'
           className={`${editSite ? 'w-full' : 'w-7/12'} bg-stone-100 h-screen overflow-y-scroll scrollbar mx-auto`}
           style={session && session.user?.email === author ? { height: 'calc(100vh - 32px)' } : {}}>
           <div
@@ -103,14 +104,18 @@ export default function Main<ReactNode>(
             >
               {
                 Object.values(layers).map((layer: any, ind: Number) => {
-                  return <LayerMoveable key={ind} data={layer} edit={editSite} />
+                  return <LayerMoveable
+                    author={author}
+                    key={ind}
+                    data={layer}
+                    edit={editSite} />
                 })
               }
             </Rnd>
           </div>
           <div className="mb-4 text-sm text-center text-stone-400">
             <div>Автор: {author}</div>
-            <div className="ms-2">Сайт создан и размещён при помощи <Link className='underline hover:text-lime-600' target='_blank' href="https://ms.be-original.ru">Miniweb</Link></div>
+            <div className="ms-2">Сайт создан и размещён при помощи <Link className='underline hover:text-lime-600' target='_blank' href="https://miniw3b.ru">Miniw3b</Link></div>
           </div>
         </section>
 

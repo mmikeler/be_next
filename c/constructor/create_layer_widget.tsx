@@ -1,4 +1,3 @@
-import { Icon } from "../ui/icon";
 import { useStore } from "@/store/store";
 import { Gallery } from "./gallery/gallery";
 import { Type_Icon } from "./icons";

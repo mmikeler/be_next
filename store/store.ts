@@ -64,14 +64,17 @@ export const useStore = create(devtools((set: any, get: any, api) => ({
 })))
 
 function createLayer(layerType: string, num: number, src: string | null) {
+  const scrollY = document.getElementById('mw__constructor')?.scrollTop
   let layer = {
     layerType: layerType,
     id: new Date().getTime(),
     title: 'Слой ' + num,
     innerText: 'Ваш текст',
     src: '',
+    link: { href: '' },
     style: {
       position: 'absolute',
+      top: scrollY ? (scrollY + 400) + 'px' : 0,
       width: '100px',
       height: '100px',
       backgroundColor: '#cccccc',

@@ -26,7 +26,10 @@ export function LayerMoveable(params: any) {
 
   return (
     <>
-      <LayerComponent data={params.data} />
+      <LayerComponent
+        edit={params.edit}
+        data={params.data}
+        author={params.author} />
       {activeLayer === id &&
         <Moveable
           key={new Date().getTime()} // Ключ для синхронизации изменений
