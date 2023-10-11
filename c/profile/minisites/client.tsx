@@ -110,7 +110,6 @@ function Wrapper(params: any) {
         style={layer.style}
         target="_blank"
         className="cursor-pointer"
-        rel="noopener noreferrer"
         href={layer.link.href || ''}>
         {params.children}
       </Link>

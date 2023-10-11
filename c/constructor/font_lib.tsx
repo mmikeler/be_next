@@ -74,7 +74,7 @@ function Font_List_Item({ font }: { font: Font }) {
         <div className="ms-auto text-xs">
           <span onClick={() => setPangramLocal('RU')} className={`cursor-pointer hover:underline mx-1 ${pangramLocal === 'RU' ? 'text-amber-400' : ''}`}>RU</span>
           <span onClick={() => setPangramLocal('EN')} className={`cursor-pointer hover:underline mx-1 ${pangramLocal === 'EN' ? 'text-amber-400' : ''}`}>EN</span>
-          <span onClick={() => setPangramLocal('123')} className={`cursor-pointer hover:underline mx-1 ${pangramLocal === '123' ? 'text-amber-400' : ''}`}>[*]</span>
+          <span onClick={() => setPangramLocal('Symbols')} className={`cursor-pointer hover:underline mx-1 ${pangramLocal === '123' ? 'text-amber-400' : ''}`}>[*]</span>
         </div>
 
       </div>
@@ -88,6 +88,9 @@ function Font_List_Item({ font }: { font: Font }) {
 }
 
 function getPangram(local: string) {
+  const RU = pangramsRU
+  const EN = pangramsEN
+  const Symbols = pangramsSymbols
   const l = eval('pangrams' + local)
   return l[getRandomInt(l.length)]
 }
@@ -113,6 +116,6 @@ const pangramsEN = [
   'Mr. Jock, TV quiz Ph.D., bags few lynx.',
 ]
 
-const pangrams123 = [
+const pangramsSymbols = [
   '01234567890_-[]()""<>?!:;.,'
 ]

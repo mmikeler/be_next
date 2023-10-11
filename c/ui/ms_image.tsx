@@ -3,16 +3,14 @@ import { useEffect, useState } from "react";
 
 
 export function MS_Image({ path, author }: { path: string, author: string }) {
-  const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState({ preview: '' });
+  const [loading, setLoading] = useState(true);
+  const [image, setImage] = useState('');
 
   useEffect(() => {
-    setLoading(true)
     try {
       axios.get(`/api/yadisk?path=${path}&author=${author}`)
         .then(result => {
           setImage(result.data || '');
-          setLoading(false)
         })
     } catch (error) {
       //
@@ -22,7 +20,13 @@ export function MS_Image({ path, author }: { path: string, author: string }) {
 
   return (
     <>
-      <img src={image?.preview} alt="miniweb" />
+      <img
+        className={!loading ? '' : 'hidden'}
+        onLoad={() => setLoading(false)}
+        rel="noreferrer"
+        src={image} alt="miniweb" />
+
+      {loading && <div className="w-full h-full bg-stone-300"></div>}
     </>
   )
 }

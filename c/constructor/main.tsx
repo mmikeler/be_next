@@ -41,7 +41,7 @@ export default function Main<ReactNode>(
   }, [])
 
   return (
-    <div className='h-screen overflow-hidden container mx-auto' style={{ maxWidth: '900px' }}>
+    <div className={`h-screen overflow-hidden mx-auto ${editSite ? 'container' : null}`}>
 
       {session && session.user?.email === author ?
         <div className="px-2 w-full flex justify-between items-center bg-slate-800 text-stone-100">
@@ -79,7 +79,7 @@ export default function Main<ReactNode>(
         {editSite ? <Constructor__Aside /> : null}
         <section
           id='mw__constructor'
-          className={`${editSite ? 'w-full' : 'w-7/12'} bg-stone-100 h-screen overflow-y-scroll scrollbar mx-auto`}
+          className={`${editSite ? 'w-7/12' : 'w-full'} bg-stone-100 h-screen overflow-y-scroll scrollbar mx-auto`}
           style={session && session.user?.email === author ? { height: 'calc(100vh - 32px)' } : {}}>
           <div
             className="m-auto relative my-5 pb-10 w-fit">

@@ -1,4 +1,4 @@
-import { Comfortaa, Roboto } from 'next/font/google'
+import { Comfortaa, Prata, Roboto } from 'next/font/google'
 
 const roboto = Roboto({
     weight: ['100', '400', '900'],
@@ -12,6 +12,12 @@ const comfortaa = Comfortaa({
     display: 'swap',
 })
 
+const prata = Prata({
+    weight: ['400'],
+    subsets: ['cyrillic', 'latin'],
+    display: 'swap',
+})
+
 export const fontLibrary = [
     {
         title: 'Roboto',
@@ -20,5 +26,9 @@ export const fontLibrary = [
     {
         title: 'Comfortaa',
         set: comfortaa
-    }
+    },
+    {
+        title: 'Prata',
+        set: prata
+    },
 ]

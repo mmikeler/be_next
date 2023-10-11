@@ -5,6 +5,9 @@ import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 import { handler } from "../auth/[...nextauth]/route";
 import axios from "axios";
+import { Base64, encode, encodeURL } from "js-base64";
+
+const utf8 = require('utf8');
 
 const prisma = new PrismaClient()
 
@@ -40,27 +43,37 @@ export async function GET(request: NextRequest) {
     });
     await prisma.$disconnect()
 
-    if (user) {
-
-      let config = {
-        headers: {
-          Authorization: `OAuth ${user?.ya_disk}`,
-          ContentType: 'application/json'
-        }
-      }
-
-      const image = await axios.get(
-        'https://cloud-api.yandex.net/v1/disk/resources?path='
-        + path.replace('disk:/Приложения/Минивеб.Диск/', '')
-        + '&preview_size=500x',
-        config
-      )
-
-      return NextResponse.json(image.data)
+    let config = {
+      headers: {
+        Authorization: `OAuth ${user?.ya_disk}`,
+      },
+      ResponseType: 'arraybuffer'
     }
-    else {
-      return NextResponse.json({ path, author })
-    }
+
+    const imaged = await axios.get(
+      'https://фотошеф.рф/mw_media?path='
+      + path
+        .replace('disk:/Приложения/Минивеб.Диск/', 'app:/')
+      + '&key=' + user?.ya_disk,
+      { responseType: 'arraybuffer' }
+    )
+
+    const image = await axios.get(
+      'https://cloud-api.yandex.net/v1/disk/resources?path='
+      + path.replace('disk:/Приложения/Miniw3b/', '')
+      + '&preview_size=500x',
+      config
+    )
+
+    const contentType = imaged.headers['content-type'];
+    const base64String = `data:${contentType};base64,${Buffer.from(
+      imaged.data,
+    ).toString('base64')}`;
+
+    return NextResponse.json(base64String)
+
   }
-  return NextResponse.json({ path, author })
+  else {
+    return NextResponse.json({ path, author })
+  }
 }
