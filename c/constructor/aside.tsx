@@ -18,7 +18,7 @@ export function Constructor__Aside<ReactNode>() {
 }
 
 function Layer(params: any) {
-  const { id, layerType, title } = params.data
+  const { id, layerType, title, style } = params.data
   const action = useStore((state: any) => state.updateStoreProp)
   const activeLayer = useStore((state: any) => state.activeLayer)
   const isActive = activeLayer === id ? 'text-slate-700 bg-amber-400' : ''
@@ -27,7 +27,9 @@ function Layer(params: any) {
     <div
       className={`flex items-center text-xs p-1 rounded cursor-pointer ${isActive}`}
       onClick={() => action('activeLayer', id)}>
-      <span className='me-1 text-sm'>
+      <span className='me-1 text-sm' style={
+        layerType === 'block' ? { color: style.backgroundColor } : {}
+      }>
         <Type_Icon type={layerType} />
       </span>
       {title}

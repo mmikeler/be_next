@@ -5,9 +5,6 @@ import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 import { handler } from "../auth/[...nextauth]/route";
 import axios from "axios";
-import { Base64, encode, encodeURL } from "js-base64";
-
-const utf8 = require('utf8');
 
 const prisma = new PrismaClient()
 

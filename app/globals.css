@@ -97,12 +97,10 @@ input[type=number] {
   caret-color: red;
 }
 
-a
-
 /* 
   Checkbox Switcher
 */
-input[type=checkbox] {
+input[type="checkbox"] {
   height: 0;
   width: 0;
   visibility: hidden;
@@ -142,4 +140,22 @@ input:checked+.checkbox-label:after {
 
 .checkbox-label:active:after {
   width: 21px;
+}
+
+.overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: '360px';
+  height: 100%;
+  background-color: #76bfe9;
+  opacity: 0.5;
+}
+
+iframe {
+  width: 100%;
+  height: inherit;
 }

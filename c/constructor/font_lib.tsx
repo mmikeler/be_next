@@ -20,7 +20,7 @@ export function FontLib(params: any) {
       {open &&
         <motion.div
           animate={{ right: 0 }}
-          className="fixed top-8 -right-60 h-screen w-80 max-w-full z-10 bg-stone-700 p-5">
+          className="fixed top-8 -right-60 h-screen w-80 max-w-full z-10 bg-stone-700 p-5 pb-20 overflow-y-auto scrollbar">
           <div className="uppercase">Библиотека шрифтов</div>
           <p className="text-xs mb-8">Отметьте шрифты, которые хотите использовать на этом сайте</p>
 
@@ -78,7 +78,7 @@ function Font_List_Item({ font }: { font: Font }) {
         </div>
 
       </div>
-      <div className="mt-1 bg-stone-100 text-stone-700 p-1 rounded">
+      <div className="mt-1 bg-stone-100 text-stone-700 p-2 rounded">
         <div className={font.set.className}>
           {getPangram(pangramLocal)}
         </div>

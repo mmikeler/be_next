@@ -11,6 +11,9 @@ export function Type_Icon({ type }: { type: string }) {
     case 'image':
       return (<Icon tag="image" />)
 
+    case 'code':
+      return (<Icon tag="code" />)
+
     default:
       break;
   }

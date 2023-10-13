@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 export default function Home() {
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <main className="flex min-h-screen flex-col items-center justify-between">
 
         <Topbar />
 
@@ -15,9 +15,9 @@ export default function Home() {
           initial={{ opacity: 0, top: 30 }}
           animate={{ opacity: 1, top: 0 }}
           className='m-auto p-3 relative'>
-          <h1 className='text-center text-5xl'>&quot;Минивэб&quot;</h1>
-          <div className="text-center text-md text-stone-500">Бесплатный элементарный конструктор функциональных сайтов без использовани шаблонов.</div>
-          <p className='text-center mt-5 text-sm'></p>
+          <h1 className='text-center text-5xl'>&quot;МиниW3B&quot;</h1>
+          <div className="text-center text-md text-stone-500 mt-5">Бесплатный элементарный конструктор сайтов без использования шаблонов.</div>
+          <div className='text-center text-md text-stone-500'>Подходит для создания простого и быстрого или уникального авторского дизайна.</div>
 
         </motion.div>
 

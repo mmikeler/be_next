@@ -83,7 +83,7 @@ export function FontField(params: any) {
           <option value={'Jost'}>По-умолчанию</option>
           {
             Object.values(fonts).map((font: any, ind: number) => {
-              return <option key={ind} value={font.set.className}>{font.title}</option>
+              return font && <option key={ind} value={font.set.className}>{font.title}</option>
             })
           }
         </select>

@@ -30,7 +30,7 @@ export function Colorpicker({ styleProp, label }: {
   return (
     <>
       {label ? <div className="mb-1">{label}</div> : null}
-      <label className="w-full h-5 block rounded relative" htmlFor={styleProp} style={{
+      <label className="w-full h-5 block rounded relative border border-slate-500" htmlFor={styleProp} style={{
         backgroundColor: value
       }}>
         <input
@@ -64,6 +64,27 @@ export function Link_(params: any) {
       onBlur={onBlur}
       className="w-full text-slate-700 p-2 scrollbar rounded"
       defaultValue={layer?.link?.href || ''}>
+    </textarea>
+  )
+}
+
+export function HTML_(params: any) {
+  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const layer = useStore((state: any) => state.layers[activeLayerID])
+  const action = useStore((state: any) => state.updateLayer)
+
+  const onBlur = (e: any) => {
+    action({
+      ...layer, innerHTML: e.target.value
+    })
+  }
+
+  return (
+    <textarea
+      onBlur={onBlur}
+      rows={20}
+      className="w-full text-slate-700 p-2 scrollbar rounded"
+      defaultValue={layer?.innerHTML || ''}>
     </textarea>
   )
 }

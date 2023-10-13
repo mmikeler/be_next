@@ -90,7 +90,14 @@ export function LayerComponent(props: any) {
             onBlur={saveChange}
             contentEditable={activeLayer === layer.id && edit}
             dangerouslySetInnerHTML={{ __html: layer.innerText }}>
-          </span>}
+          </span>
+        }
+
+        {layer.layerType === 'code' &&
+          <div className={`h-full ${props.edit ? `relative overlay` : ''}`}
+            dangerouslySetInnerHTML={{ __html: layer.innerHTML }}>
+          </div>
+        }
 
         {layer.layerType === 'image' &&
           <MS_Image path={layer.src} author={author} />

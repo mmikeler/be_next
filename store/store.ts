@@ -56,7 +56,9 @@ export const useStore = create(devtools((set: any, get: any, api) => ({
     set(() => ({ fonts: { ...get().fonts, [font.title.toLowerCase()]: font } }), false, 'store/AddFont')
   },
   removeFont: (font: Font) => {
-    set(() => ({ fonts: { ...get().fonts, [font.title.toLowerCase()]: null } }), false, 'store/removeFont')
+    let tmp = { ...get().fonts }
+    delete tmp[font.title.toLowerCase()]
+    set(() => ({ fonts: tmp }), false, 'store/removeFont')
   },
   isFontChecked: (font: Font) => {
     return get().fonts[font.title.toLowerCase()] ? true : false
@@ -70,6 +72,7 @@ function createLayer(layerType: string, num: number, src: string | null) {
     id: new Date().getTime(),
     title: 'Слой ' + num,
     innerText: 'Ваш текст',
+    innerHTML: '',
     src: '',
     link: { href: '' },
     style: {
@@ -119,6 +122,17 @@ function createLayer(layerType: string, num: number, src: string | null) {
       style: {
         ...layer.style,
         backgroundColor: 'transparent'
+      }
+    }
+  }
+
+  if (layerType === 'code') {
+    layer = {
+      ...layer, innerHTML: '',
+      style: {
+        ...layer.style,
+        backgroundColor: '#cccccc',
+        width: '360px'
       }
     }
   }
