@@ -3,7 +3,7 @@
 import { Icon } from "@/c/ui/icon"
 import axios from "axios"
 import { useSession } from "next-auth/react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Link from 'next/link'
 import { DDate } from "@/c/ui/date"
 import { useStore } from "@/store/store"
@@ -64,33 +64,43 @@ export function Site_Table_Element(params: any) {
 }
 
 export function parseProp(str: String) {
-  var numberPattern = /\d+/g;
-  return str?.match(numberPattern) || 0
+  const numberPattern = /\d+/g;
+  const match = str?.match(numberPattern)
+  return Number(match && match[0]) || 0
 }
 
 export function LayerComponent(props: any) {
   const layer = props.data
   const author: string = props.author
-  const activeLayer = useStore((state: any) => state.activeLayer)
+  const activeLayers = useStore((state: any) => state.activeLayers)
+  const isLayerActive = activeLayers.includes(layer.id) ? true : false
   const action = useStore((state: any) => state.updateLayer)
   const [edit, setEdit] = useState(false);
 
+  const focus = (e: any) => {
+    e.target.focus
+    setEdit(true)
+  }
+
   const saveChange = (e: any) => {
     setEdit(false)
-    action({ ...layer, innerText: e.target.innerHTML })
+    action({
+      ...layer,
+      innerText: sanitizeHTML(e.target.innerHTML)
+    })
   }
 
   return (
     <>
-      <Wrapper layer={layer} edit={props.edit}>
+      <Wrapper layer={layer} edit={props.edit} isLayerActive={isLayerActive}>
         {layer.layerType === 'text' &&
-          <span
-            onClick={() => setEdit(true)}
-            className={layer.fontClass}
+          <div
+            onDoubleClick={focus}
+            className={`h-full ${layer.fontClass || ''}`}
             onBlur={saveChange}
-            contentEditable={activeLayer === layer.id && edit}
+            contentEditable={isLayerActive && edit ? true : false}
             dangerouslySetInnerHTML={{ __html: layer.innerText }}>
-          </span>
+          </div>
         }
 
         {layer.layerType === 'code' &&
@@ -108,7 +118,7 @@ export function LayerComponent(props: any) {
 }
 
 function Wrapper(params: any) {
-  const layer = params.layer
+  const { layer, edit, isLayerActive } = params
 
   if (layer.link?.href.length > 0 && !params.edit) {
     return (
@@ -116,7 +126,7 @@ function Wrapper(params: any) {
         id={layer.id}
         style={layer.style}
         target="_blank"
-        className="cursor-pointer"
+        className={`cursor-pointer${isLayerActive ? ' lm' : ''}`}
         href={layer.link.href || ''}>
         {params.children}
       </Link>
@@ -127,6 +137,7 @@ function Wrapper(params: any) {
       <div
         id={layer.id}
         style={layer.style}
+        className={isLayerActive ? ' lm cursor-move' : ''}
       >
         {params.children}
       </div>
@@ -151,4 +162,33 @@ export function BaseFontLink(params: any) {
  */
 export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
+}
+
+function sanitize(el: any) {
+
+  var ALLOWED_TAGS = ["STRONG", "EM", "B"]; // !!!
+
+  var tags = Array.prototype.slice.apply(el.getElementsByTagName("*"), [0]);
+  for (var i = 0; i < tags.length; i++) {
+    console.log(tags[i].nodeName);
+
+    if (ALLOWED_TAGS.indexOf(tags[i].nodeName) == -1) {
+      usurp(tags[i]);
+    }
+  }
+}
+function usurp(p: any) {
+  var last = p;
+  for (var i = p.childNodes.length - 1; i >= 0; i--) {
+    var e = p.removeChild(p.childNodes[i]);
+    p.parentNode.insertBefore(e, last);
+    last = e;
+  }
+  p.parentNode.removeChild(p);
+}
+function sanitizeHTML(s: string) {
+  var div = document.createElement("div");
+  div.innerHTML = s;
+  sanitize(div);
+  return div.innerHTML;
 }

@@ -7,7 +7,7 @@ import { useState } from "react"
 export function Colorpicker({ styleProp, label }: {
   styleProp: string, label: string | false
 }) {
-  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const activeLayerID = useStore((state: any) => state.activeLayers[0])
   const layer = useStore((state: any) => state.layers[activeLayerID])
   const action = useStore((state: any) => state.updateLayer)
   const target = document.getElementById(layer.id)
@@ -47,7 +47,7 @@ export function Colorpicker({ styleProp, label }: {
 }
 
 export function Link_(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const activeLayerID = useStore((state: any) => state.activeLayers[0])
   const layer = useStore((state: any) => state.layers[activeLayerID])
   const action = useStore((state: any) => state.updateLayer)
 
@@ -69,7 +69,7 @@ export function Link_(params: any) {
 }
 
 export function HTML_(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const activeLayerID = useStore((state: any) => state.activeLayers[0])
   const layer = useStore((state: any) => state.layers[activeLayerID])
   const action = useStore((state: any) => state.updateLayer)
 

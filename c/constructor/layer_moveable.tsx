@@ -33,7 +33,8 @@ export function LayerMoveable(params: any) {
       {activeLayer === id &&
         <Moveable
           key={new Date().getTime()} // Ключ для синхронизации изменений
-          target={params.edit ? document.getElementById(id) : null}
+          target={params.edit ? '.tm' : ''}
+
           checkInput={true}
           origin={false}
           draggable={true}

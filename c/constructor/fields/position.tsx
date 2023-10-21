@@ -4,7 +4,7 @@ import { useStore } from "@/store/store"
 import { parse, stringify } from 'transform-parser';
 
 export function Position(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const activeLayerID = useStore((state: any) => state.activeLayers[0])
   const layer = useStore((state: any) => state.layers[activeLayerID])
   const action = useStore((state: any) => state.updateLayer)
   const style = useStore((state: any) => state.layers[activeLayerID].style)

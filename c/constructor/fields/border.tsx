@@ -6,7 +6,7 @@ import { useStore } from "@/store/store"
 import { Colorpicker } from "."
 
 export function Border(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const activeLayerID = useStore((state: any) => state.activeLayers[0])
   const layer = useStore((state: any) => state.layers[activeLayerID])
   const action = useStore((state: any) => state.updateLayer)
 

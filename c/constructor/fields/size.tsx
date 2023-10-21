@@ -4,7 +4,7 @@ import { parseProp } from "@/c/profile/minisites/client"
 import { useStore } from "@/store/store"
 
 export function Size(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayer)
+  const activeLayerID = useStore((state: any) => state.activeLayers[0])
   const layer = useStore((state: any) => state.layers[activeLayerID])
   const layerStyle = useStore((state: any) => state.layers[activeLayerID].style)
   const action = useStore((state: any) => state.updateLayer)

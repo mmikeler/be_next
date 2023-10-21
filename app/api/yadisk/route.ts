@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
   const disk = new YaDisk(user?.ya_disk || '')
 
   const res = await disk.getItemMetadata({
-    path: options.path.replace('disk:/Приложения/Минивеб.Диск/', 'app:/')
+    path: options.path.replace('disk:/Приложения/Минивеб.Диск/', 'app:/'),
+    limit: -1
   })
   await prisma.$disconnect()
   return NextResponse.json({ res })

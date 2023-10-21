@@ -11,6 +11,8 @@ import { Icon } from '../ui/icon';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react'
+import { LayerComponent, parseProp } from '../profile/minisites/client';
+import Moveable, { OnDrag, OnResize, OnRotate } from 'react-moveable';
 
 export default function Main<ReactNode>(
   { siteid, author, initialContent }:
@@ -21,13 +23,34 @@ export default function Main<ReactNode>(
   const layers = useStore((state: any) => state.layers)
   const CS = useStore((state: any) => state.constructor_size)
   const action = useStore((state: any) => state.updateStoreProp)
+  const undo = useStore((state: any) => state.undo)
+  const groupLayers = useStore((state: any) => state.group)
 
   const fixedSize: RndResizeCallback = (e, dir, ref, delta, position) => {
     action(
       'constructor_size',
-      { width: CS.width, height: CS.height + delta.height }
+      { width: CS.width, height: parseProp(CS.height.toString()) + delta.height + 'px' }
     )
   }
+
+  useEffect(() => {
+    document.addEventListener('keydown', (event) => {
+      if (session && editSite) {
+        // use history
+        if (event.code === "KeyZ"
+          && (event.ctrlKey || event.metaKey)) {
+          event.preventDefault();
+          undo()
+        }
+        // use history
+        if (event.code === "KeyG"
+          && (event.ctrlKey || event.metaKey)) {
+          event.preventDefault();
+          groupLayers()
+        }
+      }
+    })
+  }, [session, editSite, undo])
 
   useEffect(() => {
     localStorage.setItem('constructor', '0')
@@ -37,6 +60,7 @@ export default function Main<ReactNode>(
     action('constructor_size', initialProps.constructor_size || { width: '360px', height: '800px' })
     action('fonts', initialProps.fonts || {})
     action('layers', initialProps.layers || {})
+    action('navigation', initialProps.navigation || {})
     localStorage.setItem('constructor', '1')
   }, [])
 
@@ -95,7 +119,8 @@ export default function Main<ReactNode>(
                   height: '5px',
                   marginLeft: '40%',
                   marginRight: '40%',
-                  width: '20%'
+                  width: '20%',
+                  zIndex: 99999
                 }
               }}
               resizeHandleClasses={{ bottom: 'bg-amber-500 rounded' }}
@@ -104,14 +129,16 @@ export default function Main<ReactNode>(
             >
               {
                 Object.values(layers).map((layer: any, ind: Number) => {
-                  return <LayerMoveable
-                    author={author}
-                    key={ind}
-                    data={layer}
-                    edit={editSite} />
+                  return (
+                    <LayerComponent
+                      key={ind}
+                      edit={editSite}
+                      data={layer}
+                      author={author} />)
                 })
               }
             </Rnd>
+            {editSite ? <SingleMoveable /> : null}
           </div>
           <div className="mb-4 text-sm text-center text-stone-400">
             <div>Автор: {author}</div>
@@ -122,5 +149,113 @@ export default function Main<ReactNode>(
         {editSite ? <Panel /> : null}
       </div >
     </div >
+  )
+}
+
+function SingleMoveable(params: any) {
+  const layers = useStore((state: any) => state.layers)
+  const fixed = useStore((state: any) => state.updateLayer)
+  const multyFixed = useStore((state: any) => state.updateLayers)
+  // Subscribe to update
+  const activeLayers = useStore((state: any) => state.activeLayers)
+
+  const fixedStyle = (e: any) => {
+    const c = e.target.style
+    const id = e.target.id
+    if (c) {
+      fixed({
+        ...layers[id], style: {
+          ...layers[id].style,
+          transform: c.transform,
+          width: c.width,
+          height: c.height,
+          backgroundColor: c.backgroundColor
+        }
+      })
+    }
+  }
+
+  const fixedStyles = (events: any) => {
+    const updates: any = []
+    events.forEach((ev: any) => {
+      updates.push({
+        id: ev.target.id,
+        newstyle: ev.target.style
+      })
+    });
+    multyFixed(updates)
+  }
+
+  return (
+    <Moveable
+      key={new Date().getTime()} // Ключ для синхронизации изменений
+      target={'.lm'}
+
+      checkInput={true}
+      origin={false}
+      draggable={true}
+      onDrag={({
+        target,
+        beforeDelta, beforeDist,
+        left, top,
+        right, bottom,
+        delta, dist,
+        transform,
+        clientX, clientY,
+      }: OnDrag) => {
+        target!.style.transform = transform;
+      }}
+      resizable={true}
+      onResize={({
+        target, width, height,
+        dist, delta, direction,
+        clientX, clientY,
+      }: OnResize) => {
+        delta[0] && (target!.style.width = `${width}px`);
+        delta[1] && (target!.style.height = `${height}px`);
+      }}
+      onRotate={({
+        target,
+        delta, dist,
+        transform,
+        clientX, clientY,
+      }: OnRotate) => {
+        target!.style.transform = transform;
+      }}
+      rotatable={true}
+      onDragEnd={fixedStyle}
+      onResizeEnd={fixedStyle}
+      onRotateEnd={fixedStyle}
+      //
+      // Groups Events
+      //
+      onDragGroup={({ events }) => {
+        events.forEach(ev => {
+          ev.target.style.transform = ev.transform;
+        });
+      }}
+      onResizeGroup={({ events }) => {
+        events.forEach(ev => {
+          ev.target.style.width = `${ev.width}px`;
+          ev.target.style.height = `${ev.height}px`;
+          ev.target.style.transform = ev.drag.transform;
+
+        });
+      }}
+      onRotateGroup={({ events }) => {
+        events.forEach(ev => {
+          ev.target.style.transform = ev.drag.transform;
+        });
+      }}
+      onDragGroupEnd={({ events }) => {
+        fixedStyles(events)
+      }}
+      onResizeGroupEnd={({ events }) => {
+        fixedStyles(events)
+      }}
+      onRotateGroupEnd={({ events }) => {
+        fixedStyles(events)
+      }}
+    />
   )
 }
