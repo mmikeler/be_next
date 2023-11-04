@@ -5,35 +5,42 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from 'next/legacy/image'
 import { Icon } from "@/c/ui/icon";
-import { useStore } from "@/store/store";
+import useStore from "@/store/store";
 
 
 export function Disk(params: any) {
   const [disk, setDisk] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     setLoading(true)
-    try {
-      axios.post('/api/yadisk', {
-        options: {
-          path: 'app:/'
-        }
-      })
-        .then(result => {
-          setDisk(result.data.res._embedded.items || []);
-          setLoading(false)
-        })
-    } catch (error) {
-      //
-    }
 
+    axios.post('/api/yadisk', {
+      options: {
+        path: 'app:/'
+      }
+    })
+      .then(result => {
+        setDisk(result.data.res._embedded.items || []);
+        setLoading(false)
+      })
+      .catch(error =>
+        setError(true)
+      )
   }, [])
 
   if (loading) {
     return (
-      <div className="flex text-stone-400 text-center h-full">
-        Загрузка...
+      <div className="">
+        {error ?
+          <div className="rounded p-2 h-fit bg-stone-100 text-slate-700 border-l-4 border-amber-500">
+            <div className="text-lg text-red-500">Ошибка подключения</div>
+            <div className="text-sm">Убедитесь, что подключили Яндекс.Диск в <Link className="text-blue-700 underline" href="/profile/person">настройках профиля.</Link></div>
+          </div>
+          :
+          <div className="text-stone-400 text-center">Загрузка...</div>
+        }
       </div>
     )
   }

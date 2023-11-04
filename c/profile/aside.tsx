@@ -5,8 +5,10 @@ import Link from "next/link";
 
 export default function Aside(params: any) {
   return (
-    <aside className="bg-stone-100 w-3/12 max-w-xs text-stone-700 shadow shadow-slate-400">
-      <Link className="text-xl h-14 flex items-center px-3" href={'/'}>Be Next Admin</Link>
+    <aside
+      style={{ width: 'max(150px)' }}
+      className="bg-stone-100 text-slate-700 shadow shadow-slate-400">
+      <Link className="text-md h-14 flex items-center px-3" href={'/'}>miniw3b Admin</Link>
       <hr className="mx-3" />
 
       <Aside__Widget>
@@ -47,11 +49,11 @@ function Aside__Item(props: any) {
   const pathname = usePathname()
   const { icon, path, title } = props.options
   return (
-    <div className={`p-3 cursor-pointer ${pathname === path ? 'border-l-8 border-slate-700' : 'hover:bg-slate-700 hover:text-slate-100'}`}>
+    <div className={`p-3 cursor-pointer hover:bg-slate-700 hover:text-slate-100 ${pathname === path ? 'border-l-8 border-slate-700' : ''}`}>
       <Link
-        className={`flex items-center `}
+        className={`flex items-center no-underline text-xs`}
         href={path}>
-        <Icon tag={icon} />
+        <Icon className="text-2xl" tag={icon} />
         <div className="mx-1"></div>
         {title}
       </Link>

@@ -3,7 +3,7 @@ moment.locale('ru-RU')
 
 export function DDate({ date }: any) {
     if (date) {
-        return moment(date).format('DD.mm.YY')
+        return moment(date).format('DD.MM.y H:m:s')
     }
     else {
         return null

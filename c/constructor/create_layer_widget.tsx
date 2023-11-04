@@ -1,4 +1,4 @@
-import { useStore } from "@/store/store";
+import useStore from "@/store/store";
 import { Gallery } from "./gallery/gallery";
 import { Type_Icon } from "./icons";
 
@@ -26,6 +26,8 @@ export function CreateLayerWidget() {
       <div onClick={() => addLayer('code')} className="m-1 flex hover:text-lime-500 transition-all cursor-pointer">
         <Type_Icon type="code" />
       </div>
+
+      {/* Карта */}
 
     </div>
   )

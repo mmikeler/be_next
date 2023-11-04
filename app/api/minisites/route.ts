@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { random } from "lodash"
 import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 
@@ -19,11 +20,23 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const { id } = await request.json()
 
-  const result = await prisma.minisite.create({
+  let result = await prisma.minisite.create({
     data: {
-      authorId: id
+      masterId: id,
+      authorId: id,
+      slug: "ns_" + random(0, 1000000)
     }
   });
+
+  if (result.id) {
+    result = await prisma.minisite.update({
+      where: {
+        id: result.id,
+      },
+      data: { slug: "ns_" + result.id }
+    });
+
+  }
 
   return NextResponse.json({ result })
 }
@@ -31,6 +44,18 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const { id, options } = await request.json()
 
+  // Если изменяется слаг, делаем проверку на уникальность
+  if (options?.slug) {
+    const result = await prisma.minisite.findUnique({
+      where: {
+        slug: options.slug,
+      }
+    });
+    if (result) {
+      return NextResponse.json({ error: true, errorMessage: 'Такой адрес уже зарегистрирован' })
+    }
+  }
+  // Сохраняем данные
   const result = await prisma.minisite.update({
     where: {
       id: id,

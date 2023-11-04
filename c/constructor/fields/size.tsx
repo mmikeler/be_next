@@ -1,13 +1,15 @@
 "use client"
 
 import { parseProp } from "@/c/profile/minisites/client"
-import { useStore } from "@/store/store"
+import useStore from "@/store/store"
+import { useContext } from "react"
+import { LayerContext } from "../panel/panel"
 
 export function Size(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayers[0])
-  const layer = useStore((state: any) => state.layers[activeLayerID])
-  const layerStyle = useStore((state: any) => state.layers[activeLayerID].style)
+  const layer: any = useContext(LayerContext)
   const action = useStore((state: any) => state.updateLayer)
+
+  if (!layer) return null
 
   const onChangeSize = (e: any) => {
     action({

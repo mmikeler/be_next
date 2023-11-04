@@ -18,8 +18,8 @@ export function Gallery() {
 
       {open &&
         <motion.div
-          animate={{ right: 0 }}
-          className="scrollbar fixed top-8 -right-60 w-80 max-w-full z-10 bg-stone-700 p-5 overflow-auto" style={{ height: 'calc(100vh - 32px)' }}>
+          animate={{ right: 0, zIndex: 9999 }}
+          className="scrollbar fixed top-8 -right-60 w-80 max-w-full bg-stone-700 p-5 overflow-auto" style={{ height: 'calc(100vh - 32px)' }}>
           <div className="uppercase text-lg">Библиотека изображений</div>
           <p className="text-xs mb-8">Выберите изображение, которое хотите добавить на сайт</p>
 

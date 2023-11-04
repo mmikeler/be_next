@@ -6,8 +6,8 @@ import { Jost } from 'next/font/google'
 const font = Jost({ subsets: ['cyrillic', 'latin'], weight: ['400'] })
 
 export const metadata: Metadata = {
-  title: 'Miniweb',
-  description: 'Generated Mini Website',
+  title: 'Miniw3b',
+  description: 'Лёгкое создание сайтов без использования шаблонов',
 }
 
 export default function RootLayout({

@@ -3,11 +3,9 @@
 import { Icon } from "@/c/ui/icon"
 import axios from "axios"
 import { useSession } from "next-auth/react"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import Link from 'next/link'
 import { DDate } from "@/c/ui/date"
-import { useStore } from "@/store/store"
-import { MS_Image } from "@/c/ui/ms_image"
 
 export default function Add_Site_Button() {
   const { data: session } = useSession()
@@ -20,15 +18,17 @@ export default function Add_Site_Button() {
   }
 
   return (
-    <div onClick={addSite} className="pe-4 ps-2 py-2 uppercase text-slate-500 flex items-center bg-stone-100 text-xs rounded hover:bg-stone-300 cursor-pointer ms-auto">
-      <span className="text-xl h-6 w-6"><Icon tag={'add'} /></span>
+    <div
+      onClick={addSite}
+      className="pe-4 ps-2 py-2 uppercase text-stone-100 flex items-center bg-green-600 text-xs rounded hover:bg-green-700 cursor-pointer ms-auto transition-all">
+      <Icon className="text-xl h-6 w-6" tag={'add'} />
       Добавить сайт
     </div>
   )
 }
 
 export function Site_Table_Element(params: any) {
-  const { id, title, created, expired, published } = params.data
+  const { id, slug, title, created, expired, published } = params.data
   const [open, setPublic] = useState(published)
 
   const toggle = async () => {
@@ -41,24 +41,46 @@ export function Site_Table_Element(params: any) {
   }
 
   return (
-    <div className="mt-4 p-3 bg-stone-100 rounded border border-slate-300 flex items-start">
-      <span className="text-slate-500 text-xs mt-1">#{id}</span>
-      <span className="text-slate-700 ms-4">
-        <div className="text-sky-500 flex item-center text-lg mb-5">
-          <Link target="_blank" href={'/minisite/' + id}>{title}</Link>
-          <Icon className="ms-2" tag={"arrow_outward"} />
+    <div className="mt-4 p-3 bg-stone-100 rounded border border-slate-300">
+
+      <div className="text-slate-700 w-full flex">
+        <div className="text-slate-500 text-xs me-3 mt-1">#{id}</div>
+        <div>
+          <div className="flex flex-col text-md">
+            <span className="flex items-center text-lg">
+              <Link className="text-sky-500" target="_blank" href={'/m/' + slug}>
+                {title}
+              </Link>
+            </span>
+            <span className="flex items-center">
+              <Link
+                className="text-sky-700 text-sm"
+                target="_blank"
+                href={'/m/' + slug}>https://miniw3b.ru/m/{slug}</Link>
+            </span>
+          </div>
+
+          <div className="text-sm text-xs text-stone-500 mt-3">
+            <Icon className="me-2" tag={"calendar_add_on"} />
+            <DDate date={created} />
+            <div className="mx-3"></div>
+            <Icon className="me-2" tag={"event_busy"} />
+            {expired ? <DDate date={expired} /> : '-'}
+          </div>
         </div>
-        <div className="text-sm flex items-center">
-          <Icon className="me-2" tag={"calendar_add_on"} />
-          <DDate date={created} />
-          <div className="mx-3"></div>
-          <Icon className="me-2" tag={"event_busy"} />
-          {expired ? <DDate date={expired} /> : '-'}
-        </div>
-      </span>
-      <div onClick={toggle} className={`ms-auto float-right rounded ${open ? 'bg-lime-300' : 'bg-stone-300'} px-3 py-1 text-xs`}>
-        {open ? 'Доступен' : 'Закрыт'}
       </div>
+
+      <div className="flex items-center w-fit ms-auto text-xs">
+        <span>{open ? 'Вкл.' : 'Выкл.'}</span>
+        <input
+          id={slug}
+          className="checkbox"
+          onChange={toggle}
+          type="checkbox"
+          defaultChecked={open} />
+        <label htmlFor={slug} className="checkbox-label ms-3"></label>
+      </div>
+
     </div>
   )
 }
@@ -67,82 +89,6 @@ export function parseProp(str: String) {
   const numberPattern = /\d+/g;
   const match = str?.match(numberPattern)
   return Number(match && match[0]) || 0
-}
-
-export function LayerComponent(props: any) {
-  const layer = props.data
-  const author: string = props.author
-  const activeLayers = useStore((state: any) => state.activeLayers)
-  const isLayerActive = activeLayers.includes(layer.id) ? true : false
-  const action = useStore((state: any) => state.updateLayer)
-  const [edit, setEdit] = useState(false);
-
-  const focus = (e: any) => {
-    e.target.focus
-    setEdit(true)
-  }
-
-  const saveChange = (e: any) => {
-    setEdit(false)
-    action({
-      ...layer,
-      innerText: sanitizeHTML(e.target.innerHTML)
-    })
-  }
-
-  return (
-    <>
-      <Wrapper layer={layer} edit={props.edit} isLayerActive={isLayerActive}>
-        {layer.layerType === 'text' &&
-          <div
-            onDoubleClick={focus}
-            className={`h-full ${layer.fontClass || ''}`}
-            onBlur={saveChange}
-            contentEditable={isLayerActive && edit ? true : false}
-            dangerouslySetInnerHTML={{ __html: layer.innerText }}>
-          </div>
-        }
-
-        {layer.layerType === 'code' &&
-          <div className={`h-full ${props.edit ? `relative overlay` : ''}`}
-            dangerouslySetInnerHTML={{ __html: layer.innerHTML }}>
-          </div>
-        }
-
-        {layer.layerType === 'image' &&
-          <MS_Image path={layer.src} author={author} />
-        }
-      </Wrapper>
-    </>
-  )
-}
-
-function Wrapper(params: any) {
-  const { layer, edit, isLayerActive } = params
-
-  if (layer.link?.href.length > 0 && !params.edit) {
-    return (
-      <Link
-        id={layer.id}
-        style={layer.style}
-        target="_blank"
-        className={`cursor-pointer${isLayerActive ? ' lm' : ''}`}
-        href={layer.link.href || ''}>
-        {params.children}
-      </Link>
-    )
-  }
-  else {
-    return (
-      <div
-        id={layer.id}
-        style={layer.style}
-        className={isLayerActive ? ' lm cursor-move' : ''}
-      >
-        {params.children}
-      </div>
-    )
-  }
 }
 
 /*
@@ -186,7 +132,7 @@ function usurp(p: any) {
   }
   p.parentNode.removeChild(p);
 }
-function sanitizeHTML(s: string) {
+export function sanitizeHTML(s: string) {
   var div = document.createElement("div");
   div.innerHTML = s;
   sanitize(div);

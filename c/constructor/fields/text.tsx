@@ -2,12 +2,13 @@
 
 import { parseProp } from "@/c/profile/minisites/client"
 import { Icon } from "@/c/ui/icon"
-import { useStore } from "@/store/store"
+import useStore from "@/store/store"
 import { Colorpicker } from "."
+import { LayerContext } from "../panel/panel"
+import { useContext } from "react"
 
 export function FontField(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayers[0])
-  const layer = useStore((state: any) => state.layers[activeLayerID])
+  const layer: any = useContext(LayerContext)
   const action = useStore((state: any) => state.updateLayer)
   const fonts = useStore((state: any) => state.fonts)
 

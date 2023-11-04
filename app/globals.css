@@ -52,7 +52,7 @@ body {
     'opsz' 24
 }
 
-a:hover {
+a:not(.no-underline):hover {
   text-decoration: underline;
 }
 
@@ -157,5 +157,9 @@ input:checked+.checkbox-label:after {
 
 iframe {
   width: 100%;
-  height: inherit;
+  min-height: inherit;
+}
+
+body {
+  background: url('/assets/bg.png') repeat;
 }

@@ -1,13 +1,17 @@
 "use client"
 
-import { useStore } from "@/store/store"
+import useStore from "@/store/store"
 import { parse, stringify } from 'transform-parser';
+import { LayerContext } from "../panel/panel";
+import { useContext } from "react";
 
 export function Position(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayers[0])
-  const layer = useStore((state: any) => state.layers[activeLayerID])
+  const layer: any = useContext(LayerContext)
   const action = useStore((state: any) => state.updateLayer)
-  const style = useStore((state: any) => state.layers[activeLayerID].style)
+
+  if (!layer) return null
+
+  const style = layer.style
   const transform: any = parse(style.transform)
 
   const onChangeZ = (e: any) => {

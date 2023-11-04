@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Icon } from "../ui/icon"
 import { useState } from "react";
-import { useStore } from "@/store/store";
+import useStore from "@/store/store";
 import { fontLibrary } from "@/app/fonts";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { getRandomInt } from "../profile/minisites/client";

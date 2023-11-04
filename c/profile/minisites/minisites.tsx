@@ -12,7 +12,7 @@ export default async function Minisites(params: any) {
       <div className="mx-6 mb-2 mt-6 flex">
         <Add_Site_Button />
       </div>
-      <div className="mx-6">
+      <div className="mx-6 grid md:grid-cols-2 lg:grid-cols-3 gap-2">
         {sites ?
           sites?.map((s, ind) => {
             return <Site_Table_Element data={s} key={ind} />
@@ -30,9 +30,9 @@ async function getUserSites() {
   if (session) {
     const sites = await new PrismaClient().minisite.findMany({
       where: {
-        authorId: session.user.email
+        masterId: session.user.email
       },
-      include: { author: true }
+      include: { master: true }
     })
 
     return sites

@@ -1,21 +1,63 @@
 "use client"
 
-import { useStore } from "@/store/store"
-import { useState } from "react"
+import useStore from "@/store/store"
+import { useContext, useEffect, useState } from "react"
+import { LayerContext } from "../panel/panel"
+import { MinipanelContext } from "../minipanel/minipanel"
+import { parseProp } from "@/c/profile/minisites/client"
 
-
-export function Colorpicker({ styleProp, label }: {
-  styleProp: string, label: string | false
-}) {
-  const activeLayerID = useStore((state: any) => state.activeLayers[0])
-  const layer = useStore((state: any) => state.layers[activeLayerID])
+export function Size(params: any) {
+  const layer: any = useContext(LayerContext)
   const action = useStore((state: any) => state.updateLayer)
-  const target = document.getElementById(layer.id)
-  const [value, setValue] = useState(layer.style.backgroundColor);
 
+  if (!layer) return null
+
+  const onChangeSize = (e: any) => {
+    action({
+      ...layer,
+      style: { ...layer.style, [e.target.name]: e.target.value + 'px' }
+    })
+  }
+
+  return (
+    <div className="flex mt-2">
+
+      <label className="flex items-center w-full">
+        <span className="me-1">Ш</span>
+        <input
+          onChange={onChangeSize}
+          name="width"
+          className="px-1 bg-slate-700 disabled:opacity-50 w-full"
+          type="number"
+          value={parseProp(layer.style.width)} />
+      </label>
+
+      <div className="w-1/5"></div>
+
+      <label className="flex items-center w-full">
+        <span className="me-1">В</span>
+        <input
+          onChange={onChangeSize}
+          name="height"
+          className="px-1 bg-slate-700 disabled:opacity-50 w-full"
+          type="number"
+          value={parseProp(layer.style.height)} />
+      </label>
+
+    </div>
+  )
+}
+
+export function Colorpicker(props: any) {
+  const styleProp = props.styleProp
+  const label = props.label
+  const layer: any = useContext(MinipanelContext)
+  const upd = useStore((state: any) => state.updateLayer_)
+  const [value, setValue] = useState(layer?.style[styleProp]);
+  const target = document.getElementById(layer?.id)
 
   const onBlur = (e: any) => {
-    action({
+    upd(layer.id, {
       ...layer, style: {
         ...layer.style, [e.target.name]: value
       }
@@ -27,10 +69,16 @@ export function Colorpicker({ styleProp, label }: {
     setValue(e.target.value)
   }
 
+  useEffect(() => {
+    setValue(layer?.style[styleProp] || '#ffffff')
+  }, [layer, styleProp])
+
+  if (!layer) return null
+
   return (
     <>
       {label ? <div className="mb-1">{label}</div> : null}
-      <label className="w-full h-5 block rounded relative border border-slate-500" htmlFor={styleProp} style={{
+      <label className="block h-4 w-4 cursor-pointer" htmlFor={styleProp} style={{
         backgroundColor: value
       }}>
         <input
@@ -38,7 +86,7 @@ export function Colorpicker({ styleProp, label }: {
           name={styleProp}
           onBlur={onBlur}
           onChange={onChange}
-          className="w-full opacity-0"
+          className="absolute -z-10 w-full opacity-0"
           type="color"
           value={value} />
       </label>
@@ -47,8 +95,7 @@ export function Colorpicker({ styleProp, label }: {
 }
 
 export function Link_(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayers[0])
-  const layer = useStore((state: any) => state.layers[activeLayerID])
+  const layer: any = useContext(LayerContext)
   const action = useStore((state: any) => state.updateLayer)
 
   const onBlur = (e: any) => {
@@ -69,8 +116,7 @@ export function Link_(params: any) {
 }
 
 export function HTML_(params: any) {
-  const activeLayerID = useStore((state: any) => state.activeLayers[0])
-  const layer = useStore((state: any) => state.layers[activeLayerID])
+  const layer: any = useContext(LayerContext)
   const action = useStore((state: any) => state.updateLayer)
 
   const onBlur = (e: any) => {

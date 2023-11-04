@@ -17,34 +17,32 @@ model User {
   created DateTime   @default(now())
   role    String     @default("User")
   ya_disk String?
-  pages   Minisite[]
+  sites   Minisite[]
   forms   Form[]
+  points  Int        @default(0)
 }
 
 model Minisite {
   id        Int       @id @default(autoincrement())
+  slug      String    @unique
   title     String    @default("Новый сайт")
   created   DateTime  @default(now())
   expired   DateTime?
   content   String?
   published Boolean   @default(false)
-  author    User      @relation(fields: [authorId], references: [email])
+  master    User      @relation(fields: [masterId], references: [email])
+  masterId  String
   authorId  String
+  views     Int       @default(0)
+  likes     Int       @default(0)
 }
 
 model Form {
-  id        Int       @id @default(autoincrement())
-  title     String
+  id        Int     @id @default(autoincrement())
+  title     String  @default("Новая форма")
   content   String?
-  published Boolean   @default(false)
-  author    User      @relation(fields: [authorId], references: [email])
-  authorId  String
-  comment   Comment[]
-}
-
-model Comment {
-  id      Int    @id @default(autoincrement())
-  content String
-  form    Form   @relation(fields: [formId], references: [id])
-  formId  Int
+  published Boolean @default(false)
+  master    User    @relation(fields: [masterId], references: [email])
+  masterId  String
+  comments  String  @default("")
 }
