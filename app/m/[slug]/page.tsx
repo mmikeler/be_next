@@ -1,4 +1,5 @@
 import Main from '@/c/constructor/main';
+import { Icon } from '@/c/ui/icon';
 import { PrismaClient } from "@prisma/client";
 import Head from 'next/head';
 const prisma = new PrismaClient()
@@ -12,10 +13,21 @@ export default async function Page({ params }: { params: any }) {
 
   return (
     <>
-      <Main
-        siteid={page.id.toString()}
-        author={page.masterId}
-        initialContent={page.content || JSON.stringify({})} />
+      {page.published && page.master.points > 0 ?
+        <Main
+          siteid={page.id.toString()}
+          author={page.masterId}
+          initialContent={page.content || JSON.stringify({})} />
+        :
+        <div style={{ width: '360px' }} className="flex mx-auto h-screen bg-slate-700 text-stone-300">
+          <div className="m-auto text-center">
+            <Icon className="text-8xl mx-auto block" tag="lock" />
+            <div className="mt-10">
+              Сайт по этому адресу сейчас закрыт.
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }
@@ -26,7 +38,10 @@ async function getPage(slug: string) {
     where: { slug: slug },
     include: {
       master: {
-        select: { email: true }
+        select: {
+          points: true,
+          email: true
+        }
       }
     }
   })

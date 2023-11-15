@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useRef, useState } from 'react';
 import { motion } from "framer-motion"
 import Menu from "./menu";
+import { Icon } from "./icon";
 
 export default function LoginBtn() {
   const [open, setOpen] = useState(false);
@@ -13,23 +14,26 @@ export default function LoginBtn() {
   if (session) {
     return (
       <>
-        <div onClick={() => setOpen(!open)} className="flex cursor-pointer">
+        <div onClick={() => setOpen(!open)} className="relative flex cursor-pointer">
           <Image className="rounded-full" src={session.user?.image || ''} alt="miniweb" width={40} height={40} />
         </div>
 
         {open &&
           <motion.div
             initial={{ opacity: 0, top: 100 }}
-            animate={{ opacity: 1, top: 35 }}
+            animate={{ opacity: 1, top: 48 }}
             ref={menu}
-            className={`fixed mt-6 bg-stone-800 text-stone-100 rounded p-3`} style={{ minWidth: '120px' }}>
+            className={`absolute right-1 bg-stone-800 text-stone-100 rounded p-3`} style={{ minWidth: '120px', zIndex: '999' }}>
             <Menu />
           </motion.div>}
       </>
     )
   }
   return (
-    <div className="p-2 bg-slate-700 text-stone-100 rounded" onClick={() => signIn()}>
+    <div
+      className="flex items-center cursor-pointer px-3 text-sm text-slate-700"
+      onClick={() => signIn()}>
+      <Icon className="me-1" tag="login" />
       Войти
     </div>
   )

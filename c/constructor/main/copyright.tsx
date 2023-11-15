@@ -1,5 +1,6 @@
 import Link from "next/link";
 import useStore from '@/store/store'
+import LoginBtn from "@/c/ui/login-btn";
 
 export function Copyright(params: any) {
   const author = useStore((state: any) => state.author)
@@ -17,13 +18,21 @@ export function Copyright(params: any) {
 
       <div
         style={{ width: '360px' }}
-        className="bg-stone-50 mx-auto p-2 mb-6 text-xs text-center text-stone-500 border">
+        className="flex items-stretch bg-stone-50 mx-auto mb-6 text-xs text-center text-stone-500 border">
 
-        <div className="ms-2">Сайт создан и размещён при помощи <Link className='underline hover:text-lime-600' target='_blank' href="https://miniw3b.ru">Miniw3b</Link></div>
+        <div className="p-2">
+          <div className="ms-2">Сайт создан и размещён при помощи <Link className='underline hover:text-lime-600' target='_blank' href="https://miniw3b.ru">Miniw3b</Link></div>
 
-        <div className="mt-2">
-          <Link className="text-green-500 mx-2" href="/iwant">Хочу такой же</Link>
-          <Link className="text-red-500 mx-2" href="/contacts">Пожаловаться</Link>
+          <div className="mt-2">
+            <Link className="text-green-500 mx-2" href="/iwant">Хочу такой же</Link>
+            <Link className="text-red-500 mx-2" href="/contacts">Пожаловаться</Link>
+          </div>
+        </div>
+
+        <div className="flex ms-auto border-l p-2">
+          <div className="m-auto w-fit">
+            <LoginBtn />
+          </div>
         </div>
 
       </div>

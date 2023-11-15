@@ -68,7 +68,7 @@ function Layer__Single(params: any) {
 
   return (
     <div
-      className={`mt-1 flex items-center text-xs px-1 rounded cursor-pointer ${isActive}`}
+      className={`py-1 flex items-center text-xs cursor-pointer border-b border-slate-500 ${isActive}`}
       onClick={addLayerToChange}>
       {params.groupped ? <Icon className="text-stone-400" tag="line_start_diamond" /> : null}
       <span className='mx-1 text-sm' style={
@@ -113,8 +113,9 @@ function Layer__Group(params: any) {
   }
 
   return (
-    <div className="mt-1 px-1 text-xs">
-      <div className={`flex items-center py-1 text-xs rounded cursor-pointer ${isActive}`}>
+    <div className={`p-1 text-xs border-b border-slate-500 ${isActive}`}>
+      <div className={`flex items-center py-1 text-xs cursor-pointer`}>
+        <Icon tag="folder" />
         <span
           onClick={addGroupToChange}
           onBlur={saveTitle}

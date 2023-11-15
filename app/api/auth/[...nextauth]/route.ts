@@ -42,8 +42,7 @@ export const handler = NextAuth({
             ...session,
             user: {
               ...session.user,
-              id: u.id,
-              ya_disk_token: u.ya_disk
+              ...u
             }
           }
           return modSession

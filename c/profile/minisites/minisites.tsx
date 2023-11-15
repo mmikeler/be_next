@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client"
 import { getServerSession } from "next-auth/next";
-import Add_Site_Button, { Site_Table_Element } from "./client";
+import Add_Site_Button, { Minisites__Header__Info } from "./client";
 import { handler } from "@/app/api/auth/[...nextauth]/route";
+import { Site_Table_Element } from "./site_table_elem";
 
 
 export default async function Minisites(params: any) {
@@ -9,8 +10,9 @@ export default async function Minisites(params: any) {
 
   return (
     <>
-      <div className="mx-6 mb-2 mt-6 flex">
+      <div className="mx-6 mb-2 mt-6">
         <Add_Site_Button />
+        <Minisites__Header__Info />
       </div>
       <div className="mx-6 grid md:grid-cols-2 lg:grid-cols-3 gap-2">
         {sites ?

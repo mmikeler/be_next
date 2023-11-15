@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id      Int        @id @default(autoincrement())
-  email   String     @unique
-  name    String?
-  created DateTime   @default(now())
-  role    String     @default("User")
-  ya_disk String?
-  sites   Minisite[]
-  forms   Form[]
-  points  Int        @default(0)
+  id       Int        @id @default(autoincrement())
+  email    String     @unique
+  name     String?
+  created  DateTime   @default(now())
+  role     String     @default("User")
+  ya_disk  String?
+  sites    Minisite[]
+  forms    Form[]
+  payments Payment[]
+  points   Int        @default(0)
+  last_pay DateTime?
 }
 
 model Minisite {
@@ -45,4 +47,16 @@ model Form {
   master    User    @relation(fields: [masterId], references: [email])
   masterId  String
   comments  String  @default("")
+}
+
+model Payment {
+  id          Int      @id @default(autoincrement())
+  created     DateTime @default(now())
+  amount      Int
+  currency    String   @default("RUB")
+  i_key       String   @unique
+  description String   @default("")
+  client      User     @relation(fields: [clientId], references: [email])
+  clientId    String
+  status      String
 }

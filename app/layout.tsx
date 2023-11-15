@@ -6,7 +6,7 @@ import { Jost } from 'next/font/google'
 const font = Jost({ subsets: ['cyrillic', 'latin'], weight: ['400'] })
 
 export const metadata: Metadata = {
-  title: 'Miniw3b',
+  title: 'Минив3б',
   description: 'Лёгкое создание сайтов без использования шаблонов',
 }
 
