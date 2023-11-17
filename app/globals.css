@@ -42,6 +42,7 @@
 body {
   color: rgb(var(--foreground-rgb));
   min-height: 100vh;
+  background: url('/assets/bg.png') repeat;
 }
 
 .material-symbols-outlined {
@@ -84,6 +85,11 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+input {
+  outline-color: #f3f3f3;
+  outline-width: thin;
 }
 
 /* Firefox */
@@ -158,8 +164,4 @@ input:checked+.checkbox-label:after {
 iframe {
   width: 100%;
   min-height: inherit;
-}
-
-body {
-  background: url('/assets/bg.png') repeat;
 }

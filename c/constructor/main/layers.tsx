@@ -1,5 +1,4 @@
 import { MS_Image } from "@/c/ui/ms_image"
-import { random } from "lodash"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import useStore from "@/store/store"
@@ -84,7 +83,7 @@ export function LayerComponent(props: any) {
         }
 
         {layer.layerType === 'image' &&
-          <MS_Image path={layer.src} author={author} />
+          <MS_Image className="w-full" path={layer.src} author={author} />
         }
       </Wrapper>
     </>

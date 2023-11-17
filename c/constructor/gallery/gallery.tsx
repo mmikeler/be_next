@@ -1,6 +1,5 @@
 "use client"
 
-import { Icon } from "@/c/ui/icon";
 import { useState } from "react";
 import { motion } from "framer-motion"
 import { Disk } from "./disk";

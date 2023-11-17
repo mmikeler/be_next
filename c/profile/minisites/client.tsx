@@ -7,26 +7,6 @@ import { useContext } from "react"
 import { UserCtx } from "../profile"
 import { Alert } from "@/c/ui/alert"
 
-export default function Add_Site_Button() {
-  const { data: session } = useSession()
-
-  const addSite = () => {
-    if (session && session.user)
-      axios.post('/api/minisites', { id: session.user.email })
-    else
-      alert('Ошибка')
-  }
-
-  return (
-    <div
-      onClick={addSite}
-      className="pe-4 ps-2 py-2 w-fit uppercase text-stone-100 flex items-center bg-green-600 text-xs rounded hover:bg-green-700 cursor-pointer ms-auto transition-all">
-      <Icon className="text-xl h-6 w-6" tag={'add'} />
-      Добавить сайт
-    </div>
-  )
-}
-
 export function Minisites__Header__Info() {
   const user: any = useContext(UserCtx)
 
@@ -66,7 +46,7 @@ export function getRandomInt(max: number) {
 
 function sanitize(el: any) {
 
-  var ALLOWED_TAGS = ["STRONG", "EM", "B"]; // !!!
+  var ALLOWED_TAGS = ["STRONG", "EM", "B", "BR", "I"]; // !!!
 
   var tags = Array.prototype.slice.apply(el.getElementsByTagName("*"), [0]);
   for (var i = 0; i < tags.length; i++) {
@@ -77,6 +57,7 @@ function sanitize(el: any) {
     }
   }
 }
+
 function usurp(p: any) {
   var last = p;
   for (var i = p.childNodes.length - 1; i >= 0; i--) {
@@ -86,6 +67,7 @@ function usurp(p: any) {
   }
   p.parentNode.removeChild(p);
 }
+
 export function sanitizeHTML(s: string) {
   var div = document.createElement("div");
   div.innerHTML = s;

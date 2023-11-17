@@ -1,3 +1,5 @@
 {"level":"info","message":"Ежедневное списание средств за аренду сервиса","stat":{"points":0,"sites":0,"sites_stoped":0,"users":1},"timestamp":"14-11-2023 04:15:00"}
 {"level":"info","message":"Ежедневное списание средств за аренду сервиса началось","timestamp":"15-11-2023 04:15:00"}
 {"level":"info","message":"Ежедневное списание средств за аренду сервиса","stat":{"points":5,"sites":1,"sites_stoped":0,"users":1},"timestamp":"15-11-2023 04:15:00"}
+{"level":"info","message":"Ежедневное списание средств за аренду сервиса началось","timestamp":"17-11-2023 04:15:00"}
+{"level":"info","message":"Ежедневное списание средств за аренду сервиса","stat":{"points":10,"sites":2,"sites_stoped":0,"users":1},"timestamp":"17-11-2023 04:15:00"}

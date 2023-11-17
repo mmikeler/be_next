@@ -22,9 +22,8 @@ export async function POST(request: NextRequest) {
 
   const res = await disk.getItemMetadata({
     path: options.path.replace('disk:/Приложения/Минивеб.Диск/', 'app:/'),
-    limit: -1
+    limit: 10000
   })
-  await prisma.$disconnect()
   return NextResponse.json({ res })
 }
 
@@ -34,27 +33,26 @@ export async function GET(request: NextRequest) {
   const author = searchParams.get('author')
 
   if (path && author) {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
         email: author,
       }
     });
-    await prisma.$disconnect()
 
     let config = {
       headers: {
         Authorization: `OAuth ${user?.ya_disk}`,
       },
-      ResponseType: 'arraybuffer'
+      //responseType: 'arraybuffer'
     }
 
-    const imaged = await axios.get(
-      'https://фотошеф.рф/mw_media?path='
-      + path
-        .replace('disk:/Приложения/Минивеб.Диск/', 'app:/')
-      + '&key=' + user?.ya_disk,
-      { responseType: 'arraybuffer' }
-    )
+    // const imaged = await axios.get(
+    //   'https://фотошеф.рф/mw_media?path='
+    //   + path
+    //     .replace('disk:/Приложения/Минивеб.Диск/', 'app:/')
+    //   + '&key=' + user?.ya_disk,
+    //   { responseType: 'arraybuffer' }
+    // )
 
     const image = await axios.get(
       'https://cloud-api.yandex.net/v1/disk/resources?path='
@@ -63,12 +61,10 @@ export async function GET(request: NextRequest) {
       config
     )
 
-    const contentType = imaged.headers['content-type'];
-    const base64String = `data:${contentType};base64,${Buffer.from(
-      imaged.data,
-    ).toString('base64')}`;
+    const contentType = image.headers['content-type'];
+    //const base64String = `data:${contentType};base64,${image.data.preview}`;
 
-    return NextResponse.json(base64String)
+    return NextResponse.json(image.data.preview)
 
   }
   else {

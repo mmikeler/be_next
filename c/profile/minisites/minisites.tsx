@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client"
 import { getServerSession } from "next-auth/next";
-import Add_Site_Button, { Minisites__Header__Info } from "./client";
+import { Minisites__Header__Info } from "./client";
 import { handler } from "@/app/api/auth/[...nextauth]/route";
 import { Site_Table_Element } from "./site_table_elem";
+import Add_Site_Button from "./add_site_btn";
 
 
 export default async function Minisites(params: any) {

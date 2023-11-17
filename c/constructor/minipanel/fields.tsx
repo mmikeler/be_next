@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MinipanelContext } from "./minipanel";
 import { parseProp } from "@/c/profile/minisites/client";
 import useStore from "@/store/store"
@@ -56,7 +56,7 @@ export function Minipanel__Size() {
       <label className="flex items-center w-full">
         <Icon tag="width" />
         <input
-          onChange={onChangeSize}
+          onInput={onChangeSize}
           name="width"
           className="px-1 bg-white disabled:opacity-50 w-full"
           type="number"
@@ -66,7 +66,7 @@ export function Minipanel__Size() {
       <label className="flex items-center w-full">
         <Icon tag="height" />
         <input
-          onChange={onChangeSize}
+          onInput={onChangeSize}
           name="height"
           className="px-1 bg-white disabled:opacity-50 w-full"
           type="number"
@@ -76,7 +76,7 @@ export function Minipanel__Size() {
       <label className="flex items-center w-full">
         <span>x</span>
         <input
-          onChange={(e) => onChangePosition(e, 0)}
+          onInput={(e) => onChangePosition(e, 0)}
           name="left"
           className="px-1 bg-white disabled:opacity-50 w-full"
           type="number"
@@ -86,7 +86,7 @@ export function Minipanel__Size() {
       <label className="flex items-center w-full">
         <span>y</span>
         <input
-          onChange={(e) => onChangePosition(e, 1)}
+          onInput={(e) => onChangePosition(e, 1)}
           name="top"
           className="px-1 bg-white disabled:opacity-50 w-full"
           type="number"
@@ -96,7 +96,7 @@ export function Minipanel__Size() {
       <label className="flex items-center w-full">
         <span>z</span>
         <input
-          onChange={onChangeZ}
+          onInput={onChangeZ}
           className="px-1 bg-white disabled:opacity-50 w-full"
           type="number"
           value={parseProp(layer.style.zIndex || '0')} />
@@ -105,7 +105,7 @@ export function Minipanel__Size() {
       <label className="flex items-center">
         <Icon tag="rotate_right" />
         <input
-          onChange={onChangeR}
+          onInput={onChangeR}
           className="px-1 bg-white disabled:opacity-50 w-full"
           type="number"
           max={360}
@@ -147,7 +147,7 @@ export function Minipanel__Text(params: any) {
         <label className="flex items-center">
           <Icon tag={'format_size'} />
           <input
-            onChange={onChangeProp}
+            onInput={onChangeProp}
             name="fontSize"
             className="px-1 bg-white disabled:opacity-50  w-full"
             type="number"
@@ -157,7 +157,7 @@ export function Minipanel__Text(params: any) {
         <label className="flex items-center">
           <Icon tag={'format_letter_spacing'} />
           <input
-            onChange={onChangeProp}
+            onInput={onChangeProp}
             name="letterSpacing"
             className="px-1 bg-white disabled:opacity-50  w-full"
             type="number"
@@ -167,7 +167,7 @@ export function Minipanel__Text(params: any) {
         <label className="flex items-center">
           <Icon tag={'format_line_spacing'} />
           <input
-            onChange={onChangeProp}
+            onInput={onChangeProp}
             name="lineHeight"
             className="px-1 bg-white disabled:opacity-50 w-full"
             type="number"
@@ -187,7 +187,7 @@ export function Minipanel__Text(params: any) {
       <div className="flex items-center justify-around">
         <label className="flex items-center mt-2">
           <select
-            onChange={onChangeProp}
+            onInput={onChangeProp}
             data-unit={'0'}
             className="p-1 rounded bg-stone-100 w-full"
             value={layer.style.textAlign} name="textAlign">
@@ -199,7 +199,7 @@ export function Minipanel__Text(params: any) {
 
         <label className="flex items-center mt-2">
           <select
-            onChange={onChangeFont}
+            onInput={onChangeFont}
             name="fontFamily"
             className="p-1 rounded bg-stone-100 w-full"
             value={layer.fontClass}>
@@ -239,7 +239,7 @@ export function Minipanel__Border(params: any) {
       <label className="flex items-center">
         <Icon tag={'horizontal_rule'} />
         <input
-          onChange={onChange}
+          onInput={onChange}
           name="borderWidth"
           className="px-1 disabled:opacity-50 w-full"
           type="number"
@@ -249,7 +249,7 @@ export function Minipanel__Border(params: any) {
       <label className="flex items-center">
         <Icon className="rotate-45" tag={'arrow_forward_ios'} />
         <input
-          onChange={onChange}
+          onInput={onChange}
           name="borderRadius"
           className="px-1 disabled:opacity-50 w-full"
           type="number"
@@ -309,5 +309,41 @@ export function Minipanel__HTML(params: any) {
       placeholder="Вставьте ваш код"
       defaultValue={layer?.innerHTML || ''}>
     </textarea>
+  )
+}
+
+export function Minipanel__Effects(params: any) {
+  const layer: any = useContext(MinipanelContext)
+  const upd = useStore((state: any) => state.updateLayer_)
+  const [value, setValue] = useState(layer.style.opacity);
+
+  const fixedCSS = (e: any) => {
+    upd(layer.id, {
+      ...layer, style: { ...layer.style, [e.target.name]: e.target.value }
+    })
+  }
+
+  const change = (e: any) => {
+    const ml = document.getElementById(layer.id)
+    const val = Math.round(e.target.value * 10) / 10
+    if (ml) {
+      ml.style[e.target.name] = val.toString()
+      setValue(val)
+    }
+  }
+
+  return (
+    <label className="flex items-center text-xs text-slate-700">
+      <Icon tag={'opacity'} />
+      <input
+        onInput={change}
+        onBlur={fixedCSS}
+        name="opacity"
+        className="px-1 disabled:opacity-50 w-full"
+        type="number"
+        step={0.1}
+        max={1}
+        value={value} />
+    </label>
   )
 }

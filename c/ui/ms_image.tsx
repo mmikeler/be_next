@@ -2,7 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 
-export function MS_Image({ path, author }: { path: string, author: string }) {
+export function MS_Image({ path, author, className }: {
+  path: string,
+  author: string,
+  className: string
+}) {
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState('');
 
@@ -21,7 +25,7 @@ export function MS_Image({ path, author }: { path: string, author: string }) {
   return (
     <>
       <img
-        className={!loading ? '' : 'hidden'}
+        className={className + (!loading ? '' : 'hidden')}
         onLoad={() => setLoading(false)}
         rel="noreferrer"
         src={image} alt="miniweb" />

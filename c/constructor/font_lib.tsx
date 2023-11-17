@@ -19,8 +19,9 @@ export function FontLib(params: any) {
 
       {open &&
         <motion.div
+          style={{ zIndex: 9999 }}
           animate={{ right: 0 }}
-          className="fixed top-8 -right-60 h-screen w-80 max-w-full z-10 bg-stone-700 p-5 pb-20 overflow-y-auto scrollbar">
+          className="fixed top-8 -right-60 h-screen w-80 max-w-full bg-stone-700 p-5 pb-20 overflow-y-auto scrollbar">
           <div className="uppercase">Библиотека шрифтов</div>
           <p className="text-xs mb-8">Отметьте шрифты, которые хотите использовать на этом сайте</p>
 

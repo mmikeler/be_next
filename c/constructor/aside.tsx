@@ -3,21 +3,46 @@
 import useStore from '@/store/store';
 import { Type_Icon } from './icons';
 import { Icon } from '../ui/icon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function Constructor__Aside<ReactNode>() {
   const layers = useStore((state: any) => state.layers)
+  const [collapse, setCollapse] = useState(true);
 
   const navigation = []
   for (let layer in layers) {
-    navigation.push(<Layer key={layer} data={layers[layer]} path={''} />)
+    navigation.push(
+      <Layer
+        key={layer}
+        data={layers[layer]}
+        path={''} />
+    )
+  }
+
+  useEffect(() => {
+    const trigger = document.getElementById('toggleNav')
+    if (trigger) {
+      trigger.onclick = () => setCollapse(!collapse)
+    }
+  }, [collapse])
+
+  if (collapse) {
+    return null
   }
 
   return (
     <aside
-      className="bg-slate-700 p-2 text-stone-100 scrollbar overflow-y-auto"
-      style={{ height: 'calc(100vh - 32px)', width: 'max(20%, 200px)' }}>
-      {navigation && navigation}
+      id="constructor-nav"
+      className="absolute flex flex-col left-0 top-0 bottom-0 bg-slate-700 text-stone-100 scrollbar overflow-y-auto overflow-x-hidden transition-all"
+      style={{
+        height: 'calc(100vh - 32px)',
+        width: `max(20%, 200px)`,
+        zIndex: '9999',
+        padding: '0 5px'
+      }}>
+      <div className="h-full scrollbar overflow-y-auto mt-4 pb-20">
+        {navigation && navigation}
+      </div>
     </aside>
   )
 }

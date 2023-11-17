@@ -16,6 +16,7 @@ import { Markup } from './main/markup';
 import { SingleMoveable } from './layer_moveable';
 import { Copyright } from './main/copyright';
 import { General_Site_Options } from './site_options/site_options';
+import { motion } from "framer-motion"
 
 export default function Main<ReactNode>(
   { siteid, author, initialContent }:
@@ -23,6 +24,7 @@ export default function Main<ReactNode>(
 
   const [editSite, setEditSite] = useState(false);
   const { data: session } = useSession()
+  const mainlayer = useStore((state: any) => state.mainlayer)
   const layers = useStore((state: any) => state.layers)
   const CS = useStore((state: any) => state.constructor_size)
   const action = useStore((state: any) => state.updateStoreProp)
@@ -71,6 +73,7 @@ export default function Main<ReactNode>(
     action('author', author)
     action('constructor_size', initialProps.constructor_size || { width: '360px', height: '800px' })
     action('fonts', initialProps.fonts || {})
+    action('mainlayer', initialProps.mainlayer || {})
     action('layers', initialProps.layers || {})
     localStorage.setItem('constructor', '1')
   }, [])
@@ -83,50 +86,57 @@ export default function Main<ReactNode>(
           style={{ zIndex: 99999 }}
           className="px-2 w-full flex justify-between items-center bg-slate-800 text-stone-100">
 
-          <div className='flex'>
-            <Link className='flex mx-1' href="/">
-              <Icon className="text-2xl m-auto" tag={'home'} />
-            </Link>
-            <Link className='flex mx-1' href="/profile">
-              <Icon className="text-2xl m-auto" tag={'person'} />
-            </Link>
-          </div>
+          {editSite ?
+            <div
+              id="toggleNav"
+              className={`border-r flex px-1 -ms-2 py-1 cursor-pointer`}
+              title='Навигация'>
+              <Icon className="text-2xl m-auto" tag="left_panel_open" />
+            </div>
+            : null}
 
           {editSite ? <CreateLayerWidget /> : null}
 
-          <div className='flex items-center'>
+          {/* 
+            Переключатель конструктора
+          */}
+          <div className='flex items-center ms-auto'>
 
             {editSite ?
-              <>
+              <div className='border-l flex'>
                 <General_Site_Options />
                 <FontLib />
-              </>
+              </div>
               : null}
 
-            <div className="border-l flex w-8 h-8 px-2 py-1 cursor-pointer">
-              <div className="m-auto" onClick={() => setEditSite(!editSite)}>
+            <div className={`border-l flex px-1 py-1 cursor-pointer`}>
+              <div className="m-auto flex text-2xl" onClick={() => setEditSite(!editSite)}>
                 {editSite ?
-                  <Icon className="text-2xl" tag={'visibility'} />
-                  : <Icon className="text-2xl" tag={'edit'} />
+                  <Icon className="m-auto" tag={'visibility'} />
+                  : <Icon className="m-auto" tag={'edit'} />
                 }
               </div>
             </div>
+
+            <Menu />
+
           </div>
 
         </div>
         : null
       }
 
-      <div className="flex">
+      <div className="flex relative">
         {editSite ? <Constructor__Aside /> : null}
-        <div className={`relative ${editSite ? 'w-full' : 'w-full'}`}>
+        <div className={`relative w-full`}>
           <section
             id='mw__constructor'
-            className={`h-screen overflow-y-scroll scrollbar mx-auto relative`}
+            className={`h-screen overflow-y-scroll overflow-x-hidden scrollbar mx-auto relative`}
             style={{ ...constructor_body_style }}>
             <div
               className="m-auto relative my-5 w-fit">
               <Rnd
+                id="mainlayer"
                 position={{ x: 0, y: 0 }}
                 size={{ width: CS.width, height: CS.height }}
                 disableDragging={true}
@@ -143,8 +153,8 @@ export default function Main<ReactNode>(
                   }
                 }}
                 resizeHandleClasses={{ bottom: 'bg-amber-500 rounded' }}
-                className='mainwrapper border border-stone-300 bg-white mx-auto overflow-hidden'
-                style={{ position: 'static' }}
+                className={`mainwrapper border border-stone-300 mx-auto overflow-hidden ${mainlayer.fontClass}`}
+                style={{ ...mainlayer, position: 'static' }}
               >
                 {
                   <Layers editSite={editSite} author={author} layers={layers} />
@@ -156,8 +166,55 @@ export default function Main<ReactNode>(
           </section>
           {editSite ? <><MiniPanel /></> : null}
         </div>
-        {/* {editSite ? <Panel /> : null} */}
       </div >
     </div >
+  )
+}
+
+function Menu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className={`flex px-1 py-1 -mr-2 cursor-pointer`}>
+        <div
+          className="m-auto flex text-2xl"
+          onClick={() => setOpen(!open)}>
+          <Icon className="m-auto" tag={'menu'} />
+        </div>
+      </div>
+
+      {open ?
+        <Menu__Overlay>
+
+          <Link href="/" className="shadow border border-stone-400 w-24 h-24 flex flex-col justify-center items-center bg-slate-700 border-stone-100 text-center">
+            <Icon className="block text-2xl" tag="home" />
+            <div className='text-xs'>На главную</div>
+          </Link>
+
+          <Link href="/profile" className="shadow border border-stone-400 w-24 h-24 flex flex-col justify-center items-center bg-slate-700 border-stone-100 text-center">
+            <Icon className="block text-2xl" tag="person" />
+            <div className='text-xs'>Профиль</div>
+          </Link>
+
+        </Menu__Overlay>
+        : null}
+    </>
+  )
+}
+
+export function Menu__Overlay(props: any) {
+
+  return (
+    <motion.div
+      animate={{
+        opacity: 1
+      }}
+      style={{ zIndex: 9999 }}
+      className='fixed top-8 left-0 right-0 bottom-0 flex opacity-0'>
+      <div className="fixed top-8 left-0 right-0 bottom-0 bg-slate-900 opacity-50"></div>
+      <div style={{ zIndex: 99999 }} className="m-auto relative grid grid-cols-2 gap-1">
+        {props.children}
+      </div>
+    </motion.div>
   )
 }

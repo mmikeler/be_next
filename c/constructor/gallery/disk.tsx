@@ -12,13 +12,24 @@ export function Disk(params: any) {
   const [disk, setDisk] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false)
+  const [path, setPath] = useState(['app:']);
+
+  const goUP = () => {
+    path.pop()
+    setPath([...path])
+  }
+
+  const changePath = (p: string) => {
+    path.push(p)
+    setPath([...path])
+  }
 
   useEffect(() => {
     setLoading(true)
 
     axios.post('/api/yadisk', {
       options: {
-        path: 'app:/'
+        path: path.length > 1 ? path.join('/') : path[0] + '/'
       }
     })
       .then(result => {
@@ -28,7 +39,7 @@ export function Disk(params: any) {
       .catch(error =>
         setError(true)
       )
-  }, [])
+  }, [path])
 
   if (loading) {
     return (
@@ -47,11 +58,22 @@ export function Disk(params: any) {
 
   return (
     <>
+      {path.length > 1 ?
+        <div onClick={goUP} className="mb-3 text-center bg-stone-300 hover:bg-stone-400 transition-all cursor-pointer text-sm text-stone-700 rounded py-1">
+          назад
+        </div>
+        : null}
+
       {disk && disk.length > 0 ?
-        <div className="columns-3">
+        <div className="grid grid-cols-3 gap-1">
           {
             disk.map((item: object, index: number) => {
-              return <Disk__Item key={index} item={item} closeAction={params.closeAction} />
+              return (
+                <Disk__Item
+                  onClickAction={changePath}
+                  key={index}
+                  item={item}
+                  closeAction={params.closeAction} />)
             })
           }
         </div>
@@ -66,8 +88,10 @@ export function Disk(params: any) {
   )
 }
 
-function Disk__Item({ item, closeAction }: any) {
+function Disk__Item({ item, closeAction, onClickAction }: any) {
   const addLayer = useStore((state: any) => state.addLayer)
+  const name = item.name.split('.')
+  const ext = name.length > 1 ? name.pop() : name
 
   const changeImage = (e: any) => {
     addLayer('image', item.path)
@@ -75,28 +99,51 @@ function Disk__Item({ item, closeAction }: any) {
   }
 
   return (
-    <div className="text-center cursor-pointer hover:text-amber-500 transition-all">
+    <div className="mb-3 relative border w-full hover:border-amber-500 aspect-square text-center cursor-pointer hover:text-amber-500 transition-all">
+
       {
         item.type === 'dir' ?
 
-          <>
-            <Icon className="text-6xl" tag={'folder'} />
-          </>
+          <div
+            onClick={() => onClickAction(item.name)}
+            className="w-full h-full flex">
+            <Icon className="text-4xl block m-auto" tag={'folder'} />
+          </div>
 
           :
 
           <>
-            <img
-              className="border hover:border-amber-500 rounded"
-              onClick={changeImage}
-              loading="lazy"
-              src={item.preview}
-              width={'100'}
-              height={'100'}
-              alt={'miniweb'} />
+            <div className="absolute top-0 right-0"><Badge ext={ext} /></div>
+            <div
+              style={{
+                background: `url(${item.sizes[5].url}) no-repeat center / cover`,
+              }}
+              className="w-full h-full"
+              onClick={changeImage} />
           </>
       }
-      <span className="relative text-xs w-full -top-3">{item.name}</span>
+      <span className="overflow-hidden absolute -bottom-2 border whitespace-nowrap rounded w-11/12 left-1 text-xs text-center bg-stone-100 text-slate-700 z-10">
+        {name}
+      </span>
     </div>
   )
+}
+
+function Badge(params: any) {
+  let bg = 'bg-sky-700';
+  let color = 'text-white';
+  switch (params.ext) {
+    case 'png':
+      bg = 'bg-lime-700'
+      break;
+
+    case 'gif':
+      bg = 'bg-amber-700'
+      break;
+
+    default:
+      break;
+  }
+
+  return <div className={`text-xs px-1 ${bg} ${color}`}>{params.ext}</div>
 }

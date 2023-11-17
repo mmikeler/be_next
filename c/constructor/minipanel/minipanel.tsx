@@ -1,9 +1,9 @@
 import useStore from "@/store/store"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Icon } from "@/c/ui/icon"
 import { Colorpicker } from "../fields"
-import { MiniPanel__Link, Minipanel__Border, Minipanel__HTML, Minipanel__Size, Minipanel__Text } from "./fields"
+import { MiniPanel__Link, Minipanel__Border, Minipanel__Effects, Minipanel__HTML, Minipanel__Size, Minipanel__Text } from "./fields"
 import { Type_Icon } from "../icons"
 
 export const MinipanelContext = createContext(null)
@@ -86,11 +86,11 @@ function Minipanel__Single(params: any) {
   return (
     <>
       <Minipanel__Subpanel content={subPanel} />
-      <div className="text-2xl flex items-center">
+      <div className="text-2xl flex w-full items-center">
 
         <div
           onClick={() => setsubPanel('size')}
-          className={`${mod} ${subPanel === 'size' ? 'text-lime-400' : ''}`}
+          className={`${mod} ms-auto ${subPanel === 'size' ? 'text-lime-400' : ''}`}
           title='Размер и положение'>
           <Icon tag="resize" />
         </div>
@@ -110,6 +110,13 @@ function Minipanel__Single(params: any) {
           className={`${mod} ${subPanel === 'border' ? 'text-lime-400' : ''}`}
           title='Обводка'>
           <Icon tag="border_style" />
+        </div>
+
+        <div
+          onClick={() => setsubPanel('effects')}
+          className={`${mod} ${subPanel === 'effects' ? 'text-lime-400' : ''}`}
+          title='Эффекты'>
+          <Icon tag="flare" />
         </div>
 
         {L.layerType === 'text' ?
@@ -141,7 +148,7 @@ function Minipanel__Single(params: any) {
           : null
         }
 
-        <div className="bg-slate-500 h-6 mx-1" style={{ width: '2px' }}></div>
+        <div className="bg-slate-500 h-6 ms-auto me-1" style={{ width: '2px' }}></div>
 
         <div onClick={copyContent} className={mod} title='Копировать'>
           <Icon tag="content_copy" />
@@ -180,6 +187,12 @@ function Minipanel__Subpanel(props: any) {
           <Minipanel__HTML />
         </Minipanel__Subpanel__Wrapper>)
 
+    case 'effects':
+      return (
+        <Minipanel__Subpanel__Wrapper>
+          <Minipanel__Effects />
+        </Minipanel__Subpanel__Wrapper>)
+
     default:
       return (
         <Minipanel__Subpanel__Wrapper>
@@ -189,8 +202,57 @@ function Minipanel__Subpanel(props: any) {
 }
 
 function Minipanel__Subpanel__Wrapper(params: any) {
+  const [modElement, setModElement] = useState<any>(null);
+  const mod = 'absolute mb-1 w-8 h-8 bottom-0 border-2 border-stone-200 rounded-full bg-slate-700 text-stone-100 flex items-center justify-center text-2xl';
+
+  const m: any = (e: any, index: number) => {
+    if (modElement) {
+      if (modElement.hasAttribute('step')) {
+        const step = Number(modElement.getAttribute('step')) * index;
+        modElement.value = Number(modElement.value) + step
+      }
+      else {
+        modElement.value = Number(modElement.value) + index
+      }
+      modElement.dispatchEvent(new Event('input', { bubbles: true }))
+    }
+  }
+
+  useEffect(() => {
+    const inputs = document.querySelectorAll('.minipanel-subpanel input[type=number]')
+    inputs.forEach((input: any) => {
+      input.onfocus = (e: any) => { setModElement(e.target) }
+    })
+
+    function close(e: any) {
+      console.log(e.target.closest('.minipanel-subpanel'));
+
+      if (e.target.closest('.minipanel-subpanel') == null && !e.target.closest('.ext-mod')) {
+        setModElement(null)
+      }
+    }
+    document.addEventListener('click', close)
+
+    return () => {
+      document.removeEventListener('click', close)
+    }
+  }, [params.children, modElement])
+
   return (
-    <div className="absolute bottom-full left-0 w-full py-2 border border-slate-300 bg-white flex items-center px-1 rounded-t-md">
+    <div
+      className="minipanel-subpanel cursor-pointer text-sm text-slate-700 absolute bottom-full left-0 w-full py-2 border border-slate-300 bg-white flex items-center px-1 rounded-t-md">
+      {modElement ?
+        <>
+          <motion.div
+            onClick={(e) => m(e, -1)}
+            animate={{ bottom: '100%', zIndex: 9999 }}
+            className={`ext-mod ${mod} left-0`}><Icon tag="remove" /></motion.div>
+          <motion.div
+            onClick={(e) => m(e, 1)}
+            animate={{ bottom: '100%', zIndex: 9999 }}
+            className={`ext-mod ${mod} right-0`}><Icon tag="add" /></motion.div>
+        </>
+        : null}
       {params.children}
     </div>
   )

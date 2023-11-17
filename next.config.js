@@ -6,7 +6,8 @@ module.exports = {
     domains: ['downloader.disk.yandex.ru', 'avatars.yandex.net']
   },
   experimental: {
-    instrumentationHook: true
+    instrumentationHook: true,
+    serverActions: true
   },
   // Other rules...
   webpack: (config) => {

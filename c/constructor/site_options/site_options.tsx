@@ -6,6 +6,7 @@ import useStore from "@/store/store";
 import { Icon } from "@/c/ui/icon";
 import axios from "axios";
 import { sanitizeHTML } from "@/c/profile/minisites/client";
+import { General__Style } from "./general_style";
 
 export function General_Site_Options(params: any) {
   const [open, setOpen] = useState(false);
@@ -24,6 +25,7 @@ export function General_Site_Options(params: any) {
           <div className="uppercase mb-5">Настройки сайта</div>
 
           <General__Head />
+          <General__Style />
 
         </motion.div>
       }
@@ -31,9 +33,9 @@ export function General_Site_Options(params: any) {
   )
 }
 
-function Widget(params: any) {
+export function General__Widget(params: any) {
   return (
-    <div className="mb-3">
+    <div className="mb-3 text-sm">
       <div className="mb-3 border-b">
         <div className="relative px-2 -bottom-3 bg-stone-700 w-fit mx-auto">{params.title}</div>
       </div>
@@ -92,7 +94,7 @@ function General__Head(params: any) {
   }, [title])
 
   return (
-    <Widget title="Head">
+    <General__Widget title="Head">
 
       <label className="text-sm w-full block">
         <div>Title</div>
@@ -122,6 +124,6 @@ function General__Head(params: any) {
         </div>
       </label>
 
-    </Widget>
+    </General__Widget>
   )
 }

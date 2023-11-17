@@ -14,8 +14,14 @@ export default create(devtools((set: any, get: any, api) => ({
   Update root prop
   */
   updateStoreProp: (propName: string, propValue: any) => {
-    set(() => ({ [propName]: propValue }), false, 'store/update prop');
+    set(() => ({ [propName]: propValue }), false, 'store/update main prop');
     get().save();
+  },
+  /*
+  Layer collection
+  */
+  mainlayer: {
+    backgroundColor: '#f3f3f3',
   },
   /*
   Layer collection
@@ -419,6 +425,7 @@ function createLayer(layerType: string, num: number, src: string | null) {
       textAlign: 'center',
       letterSpacing: '0px',
       lineHeight: 1.2,
+      opacity: 1
     }
   }
 
