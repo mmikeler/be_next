@@ -42,7 +42,6 @@ export function LayerComponent(props: any) {
   const activeLayers = useStore((state: any) => state.activeLayers)
 
   const focus = (e: any) => {
-    e.target.focus
     setEdit(true)
   }
 
@@ -65,11 +64,17 @@ export function LayerComponent(props: any) {
 
   return (
     <>
-      <Wrapper layer={layer} edit={props.edit} isLayerActive={isLayerActive}>
+      <Wrapper
+        layer={layer}
+        edit={props.edit}
+        focus={focus}
+        setEdit={setEdit}
+        isLayerActive={isLayerActive}>
+
         {layer.layerType === 'text' &&
           <div
-            onDoubleClick={focus}
-            className={`h-full ${layer.fontClass || ''}`}
+            onClick={focus}
+            className={`relative h-full ${layer.fontClass || ''}`}
             onBlur={saveChange}
             contentEditable={isLayerActive && edit ? true : false}
             dangerouslySetInnerHTML={{ __html: layer.innerText }}>
@@ -92,10 +97,16 @@ export function LayerComponent(props: any) {
 
 function Wrapper(params: any) {
   const { layer, edit, isLayerActive } = params
+  const upd = useStore((state: any) => state.updateStoreProp)
+
+  const changeLayer = () => {
+    upd('activeLayers', [layer.id])
+  }
 
   if (layer.link?.href.length > 0 && !params.edit) {
     return (
       <Link
+        onClick={changeLayer}
         id={layer.id}
         style={layer.style}
         target="_blank"
@@ -108,6 +119,7 @@ function Wrapper(params: any) {
   else {
     return (
       <div
+        onClick={changeLayer}
         id={layer.id}
         style={layer.style}
         className={isLayerActive ? ' lm cursor-move' : ''}

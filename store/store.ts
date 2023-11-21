@@ -10,11 +10,17 @@ export default create(devtools((set: any, get: any, api) => ({
   Размер поля конструктора
   */
   constructor_size: { width: 360, height: 800 },
+  /**
+   * Дополнительные инструменты и переменные
+   */
+  tools: {
+    groupSelected: false
+  },
   /*
   Update root prop
   */
   updateStoreProp: (propName: string, propValue: any) => {
-    set(() => ({ [propName]: propValue }), false, 'store/update main prop');
+    set(() => ({ [propName]: propValue }), false, 'store/update root prop');
     get().save();
   },
   /*
@@ -415,7 +421,7 @@ function createLayer(layerType: string, num: number, src: string | null) {
       borderColor: '#333333',
       borderWidth: '0px',
       borderStyle: 'solid',
-      zIndex: 0,
+      zIndex: 50,
       transform: '',
       overflow: 'hidden',
       padding: '0px',

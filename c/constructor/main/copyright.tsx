@@ -24,8 +24,8 @@ export function Copyright(params: any) {
           <div className="ms-2">Сайт создан и размещён при помощи <Link className='underline hover:text-lime-600' target='_blank' href="https://miniw3b.ru">Miniw3b</Link></div>
 
           <div className="mt-2">
-            <Link className="text-green-500 mx-2" href="/iwant">Хочу такой же</Link>
-            <Link className="text-red-500 mx-2" href="/contacts">Пожаловаться</Link>
+            <Link className="text-green-500 mx-2" href="/p/iwant">Хочу такой же</Link>
+            <Link className="text-red-500 mx-2" href="/p/contacts">Пожаловаться</Link>
           </div>
         </div>
 

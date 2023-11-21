@@ -26,13 +26,13 @@ export function Person__Widget(props: any) {
 export function YaDiskConnectionWidget() {
   const user: any = useContext(UserCtx)
   const [loaded, setLoaded] = useState(false);
-  const [openDisk, setOpenDisk] = useState(user?.ya_disk ?? false);
+  const [openDisk, setOpenDisk] = useState(false);
 
   const getKey = () => {
     window.open(
       `https://oauth.yandex.ru/authorize?response_type=token&client_id=${process.env.NEXT_PUBLIC_YADISK_CLIENT_ID}`,
       "Miniweb.Disk",
-      'width=800,height=400');
+      'width=360,height=400');
   }
 
   const changeKey = (e: any) => {
@@ -49,30 +49,40 @@ export function YaDiskConnectionWidget() {
     })
   }
 
+  useEffect(() => {
+    setOpenDisk(user?.ya_disk)
+  }, [user])
+
+  if (openDisk === false) {
+    return <div className="text-italic">Проверка...</div>
+  }
+
   if (openDisk) {
     return <div className="text-lime-700">Диск успешно подключен!</div>
   }
 
-  return (
-    <>
-      <div>
-        <p>Подключив свой Яндекс.Диск вы сможете без ограничений использовать изображения на своих сайтах.</p>
-        <p className="text-amber-700 my-4">
-          Получите ключ <b className="text-lime-500 cursor-pointer" onClick={getKey}>ЗДЕСЬ</b> и вставьте его в форму ниже.
-        </p>
+  if (openDisk === null || openDisk) {
+    return (
+      <>
+        <div>
+          <p>Подключив свой Яндекс.Диск вы сможете без ограничений использовать изображения на своих сайтах.</p>
+          <p className="text-amber-700 my-4">
+            Получите ключ <b className="text-lime-500 cursor-pointer" onClick={getKey}>ЗДЕСЬ</b> и вставьте его в форму ниже.
+          </p>
 
-        {loaded ?
-          <span>Сохраняем...</span>
-          :
-          <input
-            onBlur={changeKey}
-            placeholder="Ваш ключ"
-            type="text"
-            className="p-3 border border-stone-200 rounded text-xs w-full" />}
+          {loaded ?
+            <span>Сохраняем...</span>
+            :
+            <input
+              onBlur={changeKey}
+              placeholder="Ваш ключ"
+              type="text"
+              className="p-3 border border-stone-200 rounded text-xs w-full" />}
 
-      </div>
-    </>
-  )
+        </div>
+      </>
+    )
+  }
 }
 
 export function Pay__Form(params: any) {

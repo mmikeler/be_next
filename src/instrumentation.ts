@@ -4,6 +4,9 @@ const cron = require('node-schedule');
 
 export function register() {
 
+  /**
+   * ========================= CRON
+   */
   cron.scheduleJob('15 4 * * *', async () => {
     /**
      * Записываем в лог итоги операции

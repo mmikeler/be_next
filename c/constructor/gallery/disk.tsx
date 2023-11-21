@@ -3,9 +3,10 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Image from 'next/legacy/image'
 import { Icon } from "@/c/ui/icon";
 import useStore from "@/store/store";
+import { useSession } from 'next-auth/react'
+import Image from 'next/image';
 
 
 export function Disk(params: any) {
@@ -90,6 +91,8 @@ export function Disk(params: any) {
 
 function Disk__Item({ item, closeAction, onClickAction }: any) {
   const addLayer = useStore((state: any) => state.addLayer)
+  const [imageData, setImageData] = useState(null);
+  const { data: session } = useSession()
   const name = item.name.split('.')
   const ext = name.length > 1 ? name.pop() : name
 
@@ -97,6 +100,20 @@ function Disk__Item({ item, closeAction, onClickAction }: any) {
     addLayer('image', item.path)
     closeAction(false)
   }
+
+  useEffect(() => {
+    if (item.type === 'file') {
+      try {
+        axios.get(`/api/yadisk?path=${item.path}&author=${session?.user?.email}&size=5`)
+          .then(result => {
+            setImageData(result.data || '');
+          })
+      } catch (error) {
+        console.log(error);
+
+      }
+    }
+  }, [])
 
   return (
     <div className="mb-3 relative border w-full hover:border-amber-500 aspect-square text-center cursor-pointer hover:text-amber-500 transition-all">
@@ -114,11 +131,14 @@ function Disk__Item({ item, closeAction, onClickAction }: any) {
 
           <>
             <div className="absolute top-0 right-0"><Badge ext={ext} /></div>
+            {imageData ?
+              <Image
+                src={imageData || ''}
+                fill={true}
+                objectFit="cover"
+                alt="miniw3b" /> : null}
             <div
-              style={{
-                background: `url(${item.sizes[5].url}) no-repeat center / cover`,
-              }}
-              className="w-full h-full"
+              className="relative w-full h-full z-10"
               onClick={changeImage} />
           </>
       }

@@ -3,11 +3,27 @@
 
 module.exports = {
   images: {
-    domains: ['downloader.disk.yandex.ru', 'avatars.yandex.net']
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.yandex.ru',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.yandex.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'miniw3b.ru',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.miniw3b.ru',
+      },
+    ],
   },
   experimental: {
     instrumentationHook: true,
-    serverActions: true
   },
   // Other rules...
   webpack: (config) => {

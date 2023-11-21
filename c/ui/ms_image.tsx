@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Image from 'next/image';
 
 
 export function MS_Image({ path, author, className }: {
@@ -24,11 +25,16 @@ export function MS_Image({ path, author, className }: {
 
   return (
     <>
-      <img
-        className={className + (!loading ? '' : 'hidden')}
-        onLoad={() => setLoading(false)}
-        rel="noreferrer"
-        src={image} alt="miniweb" />
+      {image ?
+        <Image
+          className={className + (!loading ? '' : 'hidden')}
+          onLoad={() => setLoading(false)}
+          rel="noreferrer"
+          fill={true}
+          objectFit="cover"
+          objectPosition="top left"
+          src={image} alt="miniweb" />
+        : null}
 
       {loading && <div className="w-full h-full bg-stone-300"></div>}
     </>

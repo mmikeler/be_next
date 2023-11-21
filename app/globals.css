@@ -42,13 +42,12 @@
 body {
   color: rgb(var(--foreground-rgb));
   min-height: 100vh;
-  background: url('/assets/bg.png') repeat;
 }
 
 .material-symbols-outlined {
   font-variation-settings:
     'FILL' 0,
-    'wght' 400,
+    'wght' 200,
     'GRAD' 0,
     'opsz' 24
 }

@@ -21,7 +21,7 @@ export function Minisites__Header__Info() {
 
 export function parseProp(str: String) {
   const numberPattern = /\d+/g;
-  const match = str?.match(numberPattern)
+  const match = str.toString()?.match(numberPattern)
   return Number(match && match[0]) || 0
 }
 

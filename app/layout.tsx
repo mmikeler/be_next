@@ -2,6 +2,7 @@ import { NextAuthProvider } from '@/c/provider'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Jost } from 'next/font/google'
+import bg from '../public/assets/bg.png';
 
 const font = Jost({ subsets: ['cyrillic', 'latin'], weight: ['400'] })
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={font.className}>
+      <body
+        style={{ background: `url(${bg.src}) repeat` }}
+        className={font.className}>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>

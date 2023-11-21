@@ -4,11 +4,20 @@ import useStore from '@/store/store';
 import { Type_Icon } from './icons';
 import { Icon } from '../ui/icon';
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 export function Constructor__Aside<ReactNode>() {
   const layers = useStore((state: any) => state.layers)
+  const tools = useStore((state: any) => state.tools)
+  const updRootProp = useStore((state: any) => state.updateStoreProp)
   const [collapse, setCollapse] = useState(true);
 
+  // Переключение режима группового выделения
+  const groupSelectedToogle = () => {
+    updRootProp('tools', { ...tools, groupSelected: !tools.groupSelected })
+  }
+
+  // Создаём навигацию
   const navigation = []
   for (let layer in layers) {
     navigation.push(
@@ -19,6 +28,7 @@ export function Constructor__Aside<ReactNode>() {
     )
   }
 
+  // Переключение видимости навигации
   useEffect(() => {
     const trigger = document.getElementById('toggleNav')
     if (trigger) {
@@ -31,19 +41,39 @@ export function Constructor__Aside<ReactNode>() {
   }
 
   return (
-    <aside
-      id="constructor-nav"
-      className="absolute flex flex-col left-0 top-0 bottom-0 bg-slate-700 text-stone-100 scrollbar overflow-y-auto overflow-x-hidden transition-all"
-      style={{
-        height: 'calc(100vh - 32px)',
-        width: `max(20%, 200px)`,
-        zIndex: '9999',
-        padding: '0 5px'
-      }}>
-      <div className="h-full scrollbar overflow-y-auto mt-4 pb-20">
-        {navigation && navigation}
-      </div>
-    </aside>
+    <>
+      {/* 
+        Ext. Tools
+      */}
+      <motion.div
+        animate={{
+          right: '20px'
+        }}
+        style={{ zIndex: 9999 }}
+        onClick={groupSelectedToogle}
+        className="fixed flex top-1/2 -right-10 bg-slate-700 border rounded cursor-pointer">
+        <Icon className={`text-4xl m-auto ${tools.groupSelected ? 'text-lime-500' : 'text-stone-100'}`} tag="cards" />
+      </motion.div>
+
+      {/* 
+        Navigation
+      */}
+      <motion.aside
+        animate={{ left: 0 }}
+        id="constructor-nav"
+        className="absolute flex flex-col max-w-1/3 -left-3/4 top-0 bottom-0 text-stone-100 scrollbar overflow-y-auto overflow-x-hidden transition-all"
+        style={{
+          height: 'calc(100vh - 32px)',
+          zIndex: '9999',
+          padding: '0 5px'
+        }}>
+        <div className="absolute top-0 right-0 bottom-0 left-0 bg-slate-700 opacity-60 -z-10"></div>
+        <div className="absolute top-0 bottom-0 left-0 w-7 bg-slate-700 opacity-90 -z-10"></div>
+        <div className="h-full scrollbar overflow-y-auto mt-4 pb-20">
+          {navigation && navigation}
+        </div>
+      </motion.aside>
+    </>
   )
 }
 
@@ -65,18 +95,19 @@ function Layer({ data, path }: { data: any, path: string }) {
 }
 
 function Layer__Single(params: any) {
-  const { id, layerType, title, style } = params.data
+  const { id, layerType, title, style } = params.data;
   const [t, setTitle] = useState(title);
-  const action = useStore((state: any) => state.updateStoreProp)
-  const activeLayers = useStore((state: any) => state.activeLayers)
-  const upd = useStore((state: any) => state.updateLayer_)
-  const isLayerActive = useStore((state: any) => state.isLayerActive_(params.path))
-  const isActive = isLayerActive ? 'text-slate-700 bg-amber-400' : ''
+  const action = useStore((state: any) => state.updateStoreProp);
+  const activeLayers = useStore((state: any) => state.activeLayers);
+  const isGroupSelected = useStore((state: any) => state.tools.groupSelected);
+  const upd = useStore((state: any) => state.updateLayer_);
+  const isLayerActive = useStore((state: any) => state.isLayerActive_(params.path));
+  const isActive = isLayerActive ? 'text-slate-700 bg-amber-400' : '';
   // Subscribe
-  const layers = useStore((state: any) => state.layers)
+  const layers = useStore((state: any) => state.layers);
 
   const addLayerToChange = (e: any) => {
-    if (e.ctrlKey) {
+    if (e.ctrlKey || isGroupSelected) {
       action('activeLayers', activeLayers.concat([id.toString()]))
     }
     else {

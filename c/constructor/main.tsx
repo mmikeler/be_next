@@ -33,7 +33,7 @@ export default function Main<ReactNode>(
 
   const constructor_body_style =
     session && session.user?.email === author
-      ? { height: 'calc(100vh - 32px)' } : {}
+      ? { height: 'calc(100dvh - 32px)' } : {}
 
   const fixedSize: RndResizeCallback = (e, dir, ref, delta, position) => {
     action(
@@ -209,9 +209,9 @@ export function Menu__Overlay(props: any) {
       animate={{
         opacity: 1
       }}
-      style={{ zIndex: 9999 }}
+      style={{ zIndex: 99999 }}
       className='fixed top-8 left-0 right-0 bottom-0 flex opacity-0'>
-      <div className="fixed top-8 left-0 right-0 bottom-0 bg-slate-900 opacity-50"></div>
+      <div className="fixed top-8 left-0 right-0 bottom-0 bg-stone-100 opacity-70"></div>
       <div style={{ zIndex: 99999 }} className="m-auto relative grid grid-cols-2 gap-1">
         {props.children}
       </div>

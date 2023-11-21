@@ -55,6 +55,10 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: true, errorMessage: 'Такой адрес уже зарегистрирован' })
     }
   }
+
+  // Если ставим на публикацию, то списываем суточную таксу, при условии, что сегодня
+  // TODO
+
   // Сохраняем данные
   const result = await prisma.minisite.update({
     where: {

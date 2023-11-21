@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const path = searchParams.get('path')?.replace('disk:/Приложения/Минивеб.Диск/', 'app:/')
   const author = searchParams.get('author')
+  const size = searchParams.get('size')
 
   if (path && author) {
     const user = await prisma.user.findUnique({
@@ -61,10 +62,20 @@ export async function GET(request: NextRequest) {
       config
     )
 
-    const contentType = image.headers['content-type'];
-    //const base64String = `data:${contentType};base64,${image.data.preview}`;
+    const content = await axios.get(
+      image.data.sizes[size || 0].url,
+      {
+        headers: {
+          Authorization: `OAuth ${user?.ya_disk}`,
+        },
+        responseType: 'arraybuffer'
+      }
+    )
 
-    return NextResponse.json(image.data.preview)
+    const contentType = image.headers['content-type'];
+    const base64String = `data:${contentType};base64,${Buffer.from(content.data, 'binary').toString('base64')}`;
+
+    return NextResponse.json(base64String)
 
   }
   else {

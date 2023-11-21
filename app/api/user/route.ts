@@ -38,3 +38,18 @@ export async function PATCH(request: NextRequest) {
   return NextResponse.json({ result })
 
 }
+
+// Кастомное обновление юзера независимо от сессии
+export async function POST(request: NextRequest) {
+  const { id, options } = await request.json()
+
+  const result = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: options
+  });
+
+  return NextResponse.json({ result })
+
+}
