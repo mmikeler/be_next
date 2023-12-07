@@ -10,18 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Options {
+  title String  @id @unique
+  value String?
+  desc  String?
+}
+
 model User {
-  id       Int        @id @default(autoincrement())
-  email    String     @unique
-  name     String?
-  created  DateTime   @default(now())
-  role     String     @default("User")
-  ya_disk  String?
-  sites    Minisite[]
-  forms    Form[]
-  payments Payment[]
-  points   Int        @default(0)
-  last_pay DateTime?
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  name       String?
+  created    DateTime   @default(now())
+  last_login DateTime?
+  role       String     @default("User")
+  ya_disk    String?
+  sites      Minisite[]
+  forms      Form[]
+  payments   Payment[]
+  points     Int        @default(0)
+  last_pay   DateTime?
+  strikes    Int        @default(0)
+  baned      DateTime?
 }
 
 model Minisite {
@@ -35,6 +44,7 @@ model Minisite {
   master    User      @relation(fields: [masterId], references: [email])
   masterId  String
   authorId  String
+  modify    DateTime?
   views     Int       @default(0)
   likes     Int       @default(0)
 }

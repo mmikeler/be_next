@@ -1,8 +1,7 @@
-import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file';
+//import DailyRotateFile from 'winston-daily-rotate-file';
 import { createLogger, format, transports } from 'winston';
 
-export const logger = winston.createLogger({
+export const logger = createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp({
@@ -18,8 +17,8 @@ export const logger = winston.createLogger({
     // - Write all logs with importance level of `error` or less to `error.log`
     // - Write all logs with importance level of `info` or less to `combined.log`
     //
-    new winston.transports.File({ filename: './src/logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: './src/logs/combined.log' }),
+    new transports.File({ filename: './src/logs/error.log', level: 'error' }),
+    new transports.File({ filename: './src/logs/combined.log' }),
   ],
 });
 
@@ -28,8 +27,8 @@ export const logger = winston.createLogger({
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 //
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
+  logger.add(new transports.Console({
+    format: format.simple(),
   }));
 }
 

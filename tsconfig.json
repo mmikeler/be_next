@@ -38,7 +38,8 @@
     "c/ui/menu.js",
     "app/minisite/[id]",
     "c/page.tsx",
-    "store/store.ts"
+    "src/store/store.ts",
+    "src/c/profile/dashboard"
   ],
   "exclude": [
     "node_modules"

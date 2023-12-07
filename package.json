@@ -1,6 +1,6 @@
 {
-  "name": "minisite",
-  "version": "1.0.0",
+  "name": "miniw3b",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^5.4.1",
+    "@lexical/react": "^0.12.4",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
@@ -22,6 +22,7 @@
     "fs": "^0.0.1-security",
     "image-to-base64": "^2.2.0",
     "js-base64": "^3.7.5",
+    "lexical": "^0.12.4",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "^14.0.3",
@@ -38,6 +39,8 @@
     "react-moveable": "^0.54.2",
     "react-rnd": "^10.4.1",
     "sharp": "^0.32.6",
+    "slate": "^0.101.1",
+    "slate-react": "^0.101.1",
     "tailwindcss": "3.3.3",
     "transform-parser": "^1.0.1",
     "utf8": "^3.0.0",
@@ -47,9 +50,10 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@prisma/client": "^5.6.0",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.6.3",
-    "prisma": "^5.4.1",
+    "prisma": "^5.6.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

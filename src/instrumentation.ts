@@ -7,15 +7,11 @@ export function register() {
   /**
    * ========================= CRON
    */
-  cron.scheduleJob('15 4 * * *', async () => {
-    /**
-     * Записываем в лог итоги операции
-     */
-    logger.info({
-      level: 'info',
-      message: 'Ежедневное списание средств за аренду сервиса началось',
-    })
 
+  /**
+   * Ежедневное списание средств
+   */
+  cron.scheduleJob('0 3 * * *', async () => {
     const today = new Date()
     const prisma = new PrismaClient()
 
@@ -36,9 +32,11 @@ export function register() {
 
     // Обновляем юзеров
     const result = { sites: 0, sites_stoped: 0, users: 0, points: 0 }
-    users.map(async (user) => {
+
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
       const sites = user._count.sites
-      const tax = sites * 5
+      const tax = sites * Number(process.env.NEXT_PUBLIC_DAILY_TAX);
       // Собираем статистику
       result.sites += sites
       result.users += 1
@@ -75,7 +73,7 @@ export function register() {
         // Собираем статистику
         result.sites_stoped += blocked.count
       }
-    })
+    }
 
     /**
      * Записываем в лог итоги операции
