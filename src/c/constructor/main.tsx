@@ -162,7 +162,7 @@ export default function Main<ReactNode>(
               </Rnd>
               {editSite ? <><SingleMoveable /><Markup /></> : null}
             </div>
-            <Copyright />
+            <Copyright siteid={siteid} />
           </section>
           {editSite ? <><MiniPanel /></> : null}
         </div>

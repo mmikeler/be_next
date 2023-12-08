@@ -39,7 +39,7 @@ export default function Aside(params: any) {
           options={{
             icon: 'web',
             path: '/profile/sites',
-            title: 'Cайты'
+            title: 'Страницы'
           }} />
       </Aside__Widget>
 

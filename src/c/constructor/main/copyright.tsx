@@ -2,10 +2,10 @@ import Link from "next/link";
 import useStore from '@/src/store/store'
 import LoginBtn from "@/src/c/ui/login-btn";
 
-export function Copyright(params: any) {
+export function Copyright(props: any) {
   let author: string | undefined = useStore((state: any) => state?.author)
   let master: string | undefined = useStore((state: any) => state?.master)
-  const slug = window.location.toString().split('/').pop();
+  const siteid = props.siteid ? props.siteid : '';
 
   function prep(param: string | undefined) {
     return param ? param.split('@')[0] : 'Неизвестно';
@@ -30,8 +30,8 @@ export function Copyright(params: any) {
           <div className="ms-2">Веб-страница создана и размещёна при помощи <Link className='underline hover:text-lime-600' target='_blank' href="https://miniw3b.ru">Miniw3b</Link></div>
 
           <div className="mt-2">
-            <Link className="text-green-500 mx-2" href={`/p/iwant?target=${slug}`}>Хочу такой же</Link>
-            <Link className="text-red-500 mx-2" href="/p/about#contacts">Пожаловаться</Link>
+            <Link className="text-green-500 mx-2" href={`/p/iwant?target=${siteid}`}>Хочу такой же</Link>
+            <Link className="text-red-500 mx-2" href="/m/about#contacts">Пожаловаться</Link>
           </div>
         </div>
 

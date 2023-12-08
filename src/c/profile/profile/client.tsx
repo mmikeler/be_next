@@ -6,6 +6,7 @@ import axios from "axios";
 import Main__Header from "../main_header";
 import { useRouter } from "next/navigation";
 import { UserCtx } from "../profile";
+import { Alert } from "../../ui/alert";
 
 export function Person__Widget(props: any) {
   const { title, tag }: { title: string, tag: string } = props
@@ -48,16 +49,49 @@ export function YaDiskConnectionWidget() {
     })
   }
 
+  const resetToken: () => void = () => {
+    setLoaded(true)
+    axios.patch('/api/user', {
+      options: {
+        ya_disk: null
+      }
+    }).then(res => {
+      if (res.statusText === 'OK') {
+        setOpenDisk(false)
+        window.location.reload();
+      }
+      setLoaded(false)
+    })
+  }
+
   useEffect(() => {
     setOpenDisk(user?.ya_disk)
   }, [user])
 
-  if (openDisk === false) {
+  if (openDisk === false || loaded) {
     return <div className="text-italic">Проверка...</div>
   }
 
   if (openDisk) {
-    return <div className="text-lime-700">Диск успешно подключен!</div>
+    return (
+      <>
+        <div className="text-xs">
+          <Alert type="info">
+            <div className="text-lime-700">Диск успешно подключен!</div>
+            Каталог приложения создан на Вашем Яндекс.Диске в папке Приложения. <br />
+            <br />
+            1. Добавляйте изображения только в папку приложения; <br />
+            2. Мы рекомендуем создавать внутри каталога приложения отдельные папки для каждой веб-страницы;
+          </Alert>
+        </div>
+        <div className="mt-5 text-xs flex items-center">
+          <Icon className="me-4 text-xl" tag="key" />: {user.ya_disk}
+        </div>
+        <div
+          onClick={resetToken}
+          className="mt-2 text-red-500 border-2 border-red-500 text-xs w-fit px-3 py-1 cursor-pointer">Сбросить ключ</div>
+      </>
+    )
   }
 
   if (openDisk === null || openDisk) {
@@ -72,11 +106,15 @@ export function YaDiskConnectionWidget() {
           {loaded ?
             <span>Сохраняем...</span>
             :
-            <input
-              onBlur={changeKey}
-              placeholder="Ваш ключ"
-              type="text"
-              className="p-3 border border-stone-200 rounded text-xs w-full" />}
+            <div className="flex items-center">
+              <input
+                onBlur={changeKey}
+                placeholder="Ваш ключ"
+                type="text"
+                className="p-3 border border-stone-200 rounded text-xs w-full" />
+              <div className="mx-1 text-xs border rounded p-3 bg-slate-700 text-white cursor-pointer">Сохранить</div>
+            </div>
+          }
 
         </div>
       </>

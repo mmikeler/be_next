@@ -5,6 +5,7 @@ import Image from 'next/image'
 
 export default function Home() {
   const btnMod = 'mx-2 text-stone-100 rounded p-1 px-3 transition-all cursor-pointer';
+
   return (
     <>
       <main
@@ -160,16 +161,21 @@ export default function Home() {
         </div>
 
         <div
-          style={{ background: `url('/assets/bg_2.jpg') no-repeat center / cover` }}
+          style={{ background: `url('') no-repeat center / cover` }}
           className="relative mt-5 p-5 text-white py-10 text-xl">
-          При регистрации в сервисе <br /> до 15 января, Вы получите <br />
-          <span className='bg-red-700 px-2'>1000 рублей</span> на счёт.
-          <div className="my-4"></div>
-          Этого достаточно <br /> для содержания <br />
-          <span className='bg-red-700 px-2'>6&nbsp;(шести!)</span> веб-страниц <br /> в течении месяца.
 
-          <div className="mt-10 text-xs">
-            Накаких условий мелким шрифтом. <br /> Всё честно.
+          <Image src={'/assets/bg_2.jpg'} fill={true} alt='miniw3b' />
+
+          <div className="z-10 relative">
+            При регистрации в сервисе <br /> до 15 января, Вы получите <br />
+            <span className='bg-red-700 px-2'>1000 рублей</span> на счёт.
+            <div className="my-4"></div>
+            Этого достаточно <br /> для содержания <br />
+            <span className='bg-red-700 px-2'>6&nbsp;(шести!)</span> веб-страниц <br /> в течении месяца.
+
+            <div className="mt-10 text-xs">
+              Накаких условий мелким шрифтом. <br /> Всё честно.
+            </div>
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 import { auth } from "../auth/[...nextauth]/auth";
 import prisma from "@/src/db/prisma";
+import { YaDisk } from "ya-disk-rest-api";
 
 export async function GET(request: NextRequest) {
   const data: any = await auth();
@@ -36,6 +37,14 @@ export async function PATCH(request: NextRequest) {
     },
     data: options
   });
+
+  // Делаем первый запрос к папке приложения для её создания если подключется диск.
+  if (options?.ya_disk) {
+    const disk = new YaDisk(options.ya_disk)
+    await disk.getItemMetadata({
+      path: 'app:/'
+    })
+  }
 
   return NextResponse.json({ result })
 

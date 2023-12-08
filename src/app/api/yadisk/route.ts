@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   const disk = new YaDisk(user?.ya_disk || '')
 
   const res = await disk.getItemMetadata({
-    path: options.path.replace('disk:/Приложения/Минивеб.Диск/', 'app:/'),
+    path: options.path.replace('disk:/Приложения/Miniw3b/', 'app:/'),
     limit: 10000
   })
   return NextResponse.json({ res })
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const path = searchParams.get('path')?.replace('disk:/Приложения/Минивеб.Диск/', 'app:/')
+  const path = searchParams.get('path')?.replace('disk:/Приложения/Miniw3b/', 'app:/')
   const author = searchParams.get('author')
   const size = searchParams.get('size')
 
