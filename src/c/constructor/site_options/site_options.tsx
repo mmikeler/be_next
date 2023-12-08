@@ -121,12 +121,12 @@ function General__Head(params: any) {
       <label className="text-sm w-full mt-3 block">
         <div>Slug</div>
         <input
-          onChange={(e: any) => setSlug(e.target.value)}
+          onInput={(e: any) => setSlug(e.target.value.toLowerCase().replace(' ', '_'))}
           onBlur={fixedSlug}
           className="p-1 text-slate-700 w-full"
           type="text"
           name="slug"
-          defaultValue={slug} />
+          value={slug} />
         <div className="text-xs text-stone-300 pt-1">
           Адрес ссылки на этот сайт
         </div>

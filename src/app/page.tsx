@@ -15,9 +15,16 @@ export default function Home() {
 
         <div
           className='m-auto px-3 pb-5 relative text-slate-700'>
-          <div className="p-3 -mx-3 text-sm text-center bg-gray-100 text-stone-700">
-            &quot;Создавайте свои маленькие большие шедевры с визуальным нешаблонным конструктором мини-сайтов. И управляйте ими со смартфона.&quot;
-            <div className='text-end italic mt-2 text-xs'>Леонардо Давинчи, 2023 год н.э.</div>
+          <div className="-mx-3 text-sm text-center bg-gray-100 text-stone-700 border-b border-slate-200">
+            <Image
+              src="/assets/decor_1.png"
+              width={390}
+              height={90}
+              alt='Miniw3b' />
+            <div className="p-3">
+              &quot;Создавайте свои маленькие большие шедевры с визуальным нешаблонным конструктором <br /> веб-страниц за 5 (пять!) рублей в день. <br /> И управляйте ими со смартфона.&quot;
+              <div className='text-end italic mt-2 text-xs'>Леонардо Давинчи, 2023 год н.э.</div>
+            </div>
           </div>
           <Image
             className='block mx-auto my-5'
@@ -31,6 +38,8 @@ export default function Home() {
             src={'/assets/mockup.png'} alt="miniw3b" />
 
           <div className="-mx-3 text-slate-500">
+
+            <div className="p-2 text-center mt-2 text-lg">О конструкторе</div>
 
             <div className='p-3 flex item-center'>
               <Icon className="text-4xl" tag="layers" />
@@ -82,11 +91,33 @@ export default function Home() {
               </div>
             </div>
 
+            <div className="p-2 text-center mt-2 text-lg">О сервисе</div>
+
+            <div className='p-3 flex item-center'>
+              <Icon className="text-4xl" tag="handshake" />
+              <div className="ms-2">
+                <strong>Справедливый рассчёт</strong>
+                <div className="text-sm">
+                  Баланс списывается раз в сутки только за <b>активные страницы</b>. Отключите страницы, которые Вам сейчас не нужны и не переплачивайте.
+                </div>
+              </div>
+            </div>
+
+            <div className='p-3 flex item-center'>
+              <Icon className="text-4xl" tag="savings" />
+              <div className="ms-2">
+                <strong>Экономичность</strong>
+                <div className="text-sm">
+                  Медиа-материалы хранятся в специальной папке нашего приложения на вашем Яндекс.Диске. Это позволяет нам ещё больше снизить стоимость наших услуг, а Вам - не переплачивать за чужое облако.
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <div className="flex items-center justify-center mt-5">
             <Link className={`${btnMod} bg-blue-500`} href="https://vk.com/public203449328">Вконтакте</Link>
-            <Link className={`${btnMod} bg-blue-700`} href="https://t.me">Telegram</Link>
+            <Link className={`${btnMod} bg-blue-700`} href="https://t.me/mmikeler">Telegram</Link>
           </div>
         </div>
 
@@ -115,24 +146,47 @@ export default function Home() {
           <div className="p-3 text-center text-blue-500">
             <Link className='flex items-center p-2' target='_blank' href="/m/ns_3">
               <Icon className="me-3" tag="open_in_new" />
-              Приглашение на мастер-класс
+              Пример страницы 1
             </Link>
-            <Link className='flex items-center p-2' target='_blank' href="/m/ns_3">
+            <Link className='flex items-center p-2' target='_blank' href="/m/ns_4">
               <Icon className="me-3" tag="open_in_new" />
-              Приглашение на мастер-класс
+              Пример страницы 2
+            </Link>
+            <Link className='flex items-center p-2' target='_blank' href="/m/ns_5">
+              <Icon className="me-3" tag="open_in_new" />
+              Пример страницы 3
             </Link>
           </div>
         </div>
 
-        <div className="uppercase cursor-pointer rounded w-11/12 mt-10 mx-auto bg-sky-500 hover:bg-sky-700 transition-all text-white text-lg p-3 text-center">
+        <div
+          style={{ background: `url('/assets/bg_2.jpg') no-repeat center / cover` }}
+          className="relative mt-5 p-5 text-white py-10 text-xl">
+          При регистрации в сервисе <br /> до 15 января, Вы получите <br />
+          <span className='bg-red-700 px-2'>1000 рублей</span> на счёт.
+          <div className="my-4"></div>
+          Этого достаточно <br /> для содержания <br />
+          <span className='bg-red-700 px-2'>6&nbsp;(шести!)</span> веб-страниц <br /> в течении месяца.
+
+          <div className="mt-10 text-xs">
+            Накаких условий мелким шрифтом. <br /> Всё честно.
+          </div>
+        </div>
+
+        <div className="mt-5 mx-5 text-center text-sm">
+          Ознакомьтесь с <Link className='text-sky-500' target='_blank' href=""> пользовательским соглашением</Link>, чтобы
+        </div>
+
+        <div className="uppercase cursor-pointer rounded w-11/12 mt-2 mx-auto bg-sky-500 hover:bg-sky-700 transition-all text-white text-lg p-3 text-center">
           <span><Icon tag="person_play" /></span> начать творить бесплатно <span><Icon tag="person_play" /></span>
         </div>
+
         <div className="text-stone-400 text-center text-sm">
-          Нажав кнопку Вы будете направлены на страницу регистрации, а затем в личный кабинет
+          Нажав кнопку Вы будете направлены на страницу регистрации, а затем в личный кабинет.
         </div>
 
         <div className="mt-10 text-sm bg-gray-50 px-2 py-5 border-t text-blue-500">
-          <Link className='block mt-2' href="/p/about" target='_blank'>
+          <Link className='block mt-2' href="/m/about" target='_blank'>
             <Icon className="me-3" tag="open_in_new" />
             О сервисе
           </Link>

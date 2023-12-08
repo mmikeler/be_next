@@ -1,7 +1,6 @@
 import Main from '@/src/c/constructor/main';
 import { Icon } from '@/src/c/ui/icon';
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient()
+import prisma from '@/src/db/prisma';
 
 export default async function Page({ params }: { params: any }) {
   const page = await getPage(params.slug)
@@ -33,7 +32,7 @@ export default async function Page({ params }: { params: any }) {
 
 async function getPage(slug: string) {
 
-  const page = await prisma.minisite.findUnique({
+  const page = await prisma?.minisite.findUnique({
     where: { slug: slug },
     include: {
       master: {

@@ -86,7 +86,7 @@ export const PATCH = async (request: NextRequest) => {
   if (options?.slug) {
     const result = await prisma.minisite.findUnique({
       where: {
-        slug: options.slug
+        slug: options.slug.toLowerCase().replace(' ', '_')
       }
     });
     if (result) {
