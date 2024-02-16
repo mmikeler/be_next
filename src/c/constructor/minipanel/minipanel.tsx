@@ -23,7 +23,7 @@ export function MiniPanel() {
           height: '32px',
           left: 'calc(50% - 172px)',
           top: 'calc(100dvh + 32px)',
-          zIndex: 9999
+          zIndex: 9998
         }}
         className="absolute bg-slate-700 flex items-center justify-center px-1">
 

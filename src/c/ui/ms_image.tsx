@@ -30,8 +30,8 @@ export function MS_Image({ path, author, className }: {
           className={className + (!loading ? '' : 'hidden')}
           onLoad={() => setLoading(false)}
           rel="noreferrer"
-          fill={true}
-          style={{ objectFit: 'contain', objectPosition: 'top left' }}
+          width={2000}
+          height={2000}
           src={image} alt="miniweb" />
         : null}
 

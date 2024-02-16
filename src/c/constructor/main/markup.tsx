@@ -26,9 +26,7 @@ export function Markup() {
   }
 
   const displayMarks = (event: any) => {
-    // use history
-    if (event.code === "KeyH"
-      && (event.ctrlKey || event.metaKey)) {
+    if (event.code === "KeyH" && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
       setOpen(!open)
     }
@@ -42,8 +40,8 @@ export function Markup() {
   }, [open])
 
   return (
-    <>
+    <div id="markup">
       {open ? marks : null}
-    </>
+    </div>
   )
 }

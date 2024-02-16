@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 
 export function ADMIN__Users(params: any) {
@@ -12,6 +13,7 @@ export function ADMIN__Users(params: any) {
 
   return (
     <div className="p-5">
+      <div className="my-3 text-center">Пользователи</div>
       <table className="mx-auto text-xs table-auto">
         <thead>
           <tr>
@@ -40,39 +42,85 @@ function ADMIN__Table_User(params: any) {
   const user = params.userData
 
   return (
-    <tr>
-      <ADMIN__Table_User__Input id={user.id} name="id" value={user.id} />
-      <ADMIN__Table_User__Input id={user.id} name="email" value={user.email} />
-      <ADMIN__Table_User__Input id={user.id} name="name" value={user.name} />
-      <ADMIN__Table_User__Input id={user.id} name="created" value={moment(user.created).format('DD.MM.yyyy hh:mm')} />
-      <ADMIN__Table_User__Input id={user.id} name="role" value={user.role} />
-      <ADMIN__Table_User__Input id={user.id} name="ya_disk" value={user.ya_disk} />
-      <ADMIN__Table_User__Input id={user.id} name="points" value={user._count.sites} />
-      <ADMIN__Table_User__Input id={user.id} name="site" value={user._count.forms} />
-      <ADMIN__Table_User__Input id={user.id} name="form" value={user._count.payments} />
-      <ADMIN__Table_User__Input id={user.id} name="payment" value={user.points} />
-      <ADMIN__Table_User__Input id={user.id} name="last_pay" value={user.last_pay} />
+    <tr className="bg-gray-100 text-slate-700">
+      <ADMIN__Table_User__Input user={user} type="number" name="id" />
+      <ADMIN__Table_User__Input user={user} type="text" name="email" />
+      <ADMIN__Table_User__Input user={user} type="text" name="name" />
+      <ADMIN__Table_User__Input user={user} type="date" name="created" />
+      <ADMIN__Table_User__Input user={user} type="text" name="role" />
+      <ADMIN__Table_User__Input user={user} type="text" name="ya_disk" />
+      <ADMIN__Table_User__Input user={user} type="text" name="sites" />
+      <ADMIN__Table_User__Input user={user} type="text" name="forms" />
+      <ADMIN__Table_User__Input user={user} type="text" name="payments" />
+      <ADMIN__Table_User__Input user={user} type="number" name="points" />
+      <ADMIN__Table_User__Input user={user} type="date" name="last_pay" />
     </tr>
   )
 }
 
 function ADMIN__Table_User__Input(params: any) {
+  const { user, type, name } = params;
+  const v = user[name];
 
   const changeKey = async (e: any) => {
-    axios.post('/api/user', {
-      id: params.id,
-      options: {
-        [e.target.name]: params.name.match(['points']) ? Number(e.target.value) : e.target.value
-      }
-    }).then(res => {
-      console.log(res);
-    })
+    const toastID = toast.loading('Пожалуйста, подождите...');
+    try {
+      axios.post('/api/user', {
+        id: user.id,
+        options: {
+          [e.target.name]: type === 'number' ? Number(e.target.value) : e.target.value
+        }
+      }).then(res => {
+        res?.data?.error ?
+          toast.update(toastID, {
+            render: res.data?.errorMessage || 'Ошибка',
+            type: 'error',
+            isLoading: false,
+            autoClose: 1000
+          })
+          :
+          toast.update(toastID, {
+            render: 'Данные обновлены',
+            type: 'success',
+            isLoading: false,
+            autoClose: 1000
+          });
+      })
+        .catch(error => {
+          toast.update(toastID, {
+            render: error || 'Ошибка',
+            type: 'error',
+            isLoading: false,
+            autoClose: 1000
+          })
+        })
+    } catch (error: any) {
+      toast.update(toastID, {
+        render: 'Ошибка',
+        type: 'error',
+        isLoading: false,
+        autoClose: 1000
+      })
+    }
   }
 
-  if (params.name === 'id') {
+  const value = () => {
+
+    if (type === 'date') {
+      return v ? moment(v).format('YYYY-MM-DD') : v;
+    }
+
+    if (name.match(/sites|forms|payments/)) {
+      return user._count.sites;
+    }
+
+    return user[name] ? user[name].toString() : '-';
+  }
+
+  if (params.name.match(/id|created|role|sites|forms|payments|last_pay/)) {
     return (
       <td className="text-center p-2 border">
-        {params.value}
+        {value()}
       </td>
     )
   }
@@ -81,10 +129,10 @@ function ADMIN__Table_User__Input(params: any) {
       <td className="text-center p-2 border">
         <input
           onBlur={changeKey}
-          name={params.name}
-          className="bg-slate-700 p-1 w-fit text-center"
+          name={name}
+          className="bg-white p-1 w-fit text-center"
           type="text"
-          defaultValue={params.value} />
+          defaultValue={value()} />
       </td>
     )
   }

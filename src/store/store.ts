@@ -1,8 +1,10 @@
 import { Font } from '@/src/c/constructor/font_lib';
 import { create } from 'zustand'
-import { devtools, persist, createJSONStorage } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 import axios from 'axios';
 import { random } from 'lodash';
+import { toast } from 'react-toastify';
+import moment from 'moment';
 const _ = require('lodash');
 
 export default create(
@@ -132,38 +134,94 @@ export default create(
       get().save();
     },
     /**
+     * Meta data
+     */
+    meta: {},
+    /**
+     * update meta
+     * @param metaName
+     * @param metaValue
+     * @returns  
+     */
+    updateMeta: (metaName: string, metaValue: string) => {
+      set(() => ({ meta: { ...get().meta, [metaName]: metaValue } }))
+      get().save();
+    },
+    /**
      * Fonts
      */
-    fonts: {},
-    addFont: (font: Font) => {
-      set(() => ({ fonts: { ...get().fonts, [font.title.toLowerCase()]: font } }), false, 'store/AddFont');
+    fonts: {
+      google: {},
+      local: {}
     },
-    removeFont: (font: Font) => {
+    addFont: (font: Font, fontDir: string = 'google') => {
+      set(() => ({
+        fonts: {
+          ...get().fonts,
+          [fontDir]: {
+            ...get().fonts[fontDir], [font.title.toLowerCase()]: font
+          }
+        }
+      }), false, 'store/AddFont');
+      get().save();
+    },
+    removeFont: (font: Font, fontDir: string = 'google') => {
       let tmp = { ...get().fonts };
-      delete tmp[font.title.toLowerCase()];
+      delete tmp[fontDir][font.title.toLowerCase()];
       set(() => ({ fonts: tmp }), false, 'store/removeFont');
+      get().save();
     },
-    isFontChecked: (font: Font) => {
-      return get().fonts[font.title.toLowerCase()] ? true : false;
+    isFontChecked: (font: Font, fontDir: string = 'google') => {
+      if (get().fonts[fontDir]) {
+        return get().fonts[fontDir][font.title.toLowerCase()] ? true : false;
+      }
     },
     /**
      * SAVE
      */
     save: async function () {
-      try {
+
+      // Сохраняем в БД
+      async function saveData() {
         if (localStorage.getItem('constructor') === '1') {
-          // Сохраняем в БД
-          const saveData = JSON.stringify(get());
+
+          let layers = _.cloneDeep(get().layers);
+          for (let layer in layers) {
+            layers[layer].node = null;
+          }
+
           const res = await axios.patch('/api/minisites', {
             id: Number(get().siteid),
             options: {
-              content: saveData,
+              content: JSON.stringify({
+                id: get().id,
+                constructor_size: get().constructor_size,
+                fonts: get().fonts,
+                mainlayer: get().mainlayer,
+                layers: layers,
+                meta: get().meta
+              }),
               modify: new Date()
             }
           });
+          return res;
         }
+        return false;
+      }
+
+      try {
+        await saveData();
       } catch (error) {
-        alert('Сервер не ответил должным образом. Рекомендуем обновить страницу во избежании потери данных.');
+        console.log(error);
+
+        toast.promise(
+          saveData(),
+          {
+            pending: 'Ошибка сохранения данных. Пробуем ещё раз.',
+            success: 'Всё в порядке. Можно продолжать.',
+            error: 'Не удалось. Попробуйте обновить страницу.'
+          }
+        )
       }
     },
     /**
@@ -408,7 +466,11 @@ export default create(
 );
 
 function createLayer(layerType: string, num: number, src: string | null) {
-  const scrollY = document.getElementById('mw__constructor')?.scrollTop
+  const scrollY = document.getElementById('mw__constructor')?.scrollTop;
+  const d = new Date();
+  d.setHours(0);
+  d.setMinutes(0);
+  d.setSeconds(0);
   let layer = {
     layerType: layerType,
     id: new Date().getTime().toString(),
@@ -417,6 +479,19 @@ function createLayer(layerType: string, num: number, src: string | null) {
     innerHTML: '',
     src: '',
     link: { href: '' },
+    timer: {
+      date: moment(d.getTime()).format("YYYY-MM-DD"), // Дата конца отсчёта
+      time: '1', // Время в день конца отсчёта
+      delimeter: ':', // Разделитель
+      parts: { // Переключатели дизайна
+        days: true, // Показывать дни
+        hours: true, // Показывать часы
+        minutes: true, // Показывать минуты
+        seconds: true, // Показывать секунды
+        text: true // Показывать подписи
+      },
+      endText: 'Уже идёт!'
+    },
     style: {
       position: 'absolute',
       top: scrollY ? (scrollY + 400) + 'px' : 0,
@@ -494,6 +569,19 @@ function createLayer(layerType: string, num: number, src: string | null) {
         ...layer.style,
         backgroundColor: '#cccccc',
         width: '360px'
+      }
+    }
+  }
+
+  if (layerType === 'module_timer') {
+    layer = {
+      ...layer,
+      style: {
+        ...layer.style,
+        backgroundColor: 'transparent',
+        width: '360px',
+        height: '60px',
+        textAlign: 'center',
       }
     }
   }

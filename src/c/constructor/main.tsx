@@ -17,6 +17,7 @@ import { SingleMoveable } from './layer_moveable';
 import { Copyright } from './main/copyright';
 import { General_Site_Options } from './site_options/site_options';
 import { motion } from "framer-motion"
+import { Custom_Fonts_In_Head } from './main/custom_fonts';
 
 export default function Main<ReactNode>(
   { siteid, author, initialContent }:
@@ -26,6 +27,7 @@ export default function Main<ReactNode>(
   const { data: session } = useSession()
   const mainlayer = useStore((state: any) => state.mainlayer)
   const layers = useStore((state: any) => state.layers)
+  const customFonts = useStore((state: any) => state.fonts?.local ?? []);
   const CS = useStore((state: any) => state.constructor_size)
   const action = useStore((state: any) => state.updateStoreProp)
   const undo = useStore((state: any) => state.undo)
@@ -43,7 +45,7 @@ export default function Main<ReactNode>(
   }
 
   useEffect(() => {
-    document.addEventListener('keydown', (event) => {
+    function addEvents(event: any) {
       if (session && editSite) {
         // use history
         if (event.code === "KeyZ"
@@ -63,7 +65,13 @@ export default function Main<ReactNode>(
           action('activeLayers', [])
         }
       }
+    }
+    document.addEventListener('keydown', addEvents)
+
+    return (() => {
+      document.removeEventListener('keydown', addEvents);
     })
+
   }, [session, editSite, undo])
 
   useEffect(() => {
@@ -75,11 +83,15 @@ export default function Main<ReactNode>(
     action('fonts', initialProps.fonts || {})
     action('mainlayer', initialProps.mainlayer || {})
     action('layers', initialProps.layers || {})
+    action('meta', initialProps.meta || {})
     localStorage.setItem('constructor', '1')
   }, [])
 
   return (
     <div className={`h-screen overflow-hidden mx-auto ${editSite ? 'container' : null}`}>
+
+      {/* Подключаем кастомные шрифты */}
+      <Custom_Fonts_In_Head />
 
       {session && session.user?.email === author ?
         <div

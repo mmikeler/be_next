@@ -9,13 +9,12 @@ import maintheme from './plugins/themes/theme1';
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { ListItemNode, ListNode } from "@lexical/list";
-import { CodeHighlightNode, CodeNode } from "@lexical/code";
+import { CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { TRANSFORMERS } from "@lexical/markdown";
 import useStore from '@/src/store/store';
+import { useEffect } from 'react';
 
 interface myInitialConfigType extends InitialConfigType {
   editorState?: any
@@ -57,7 +56,7 @@ const Placeholder = () => {
 };
 
 export function Editor(props: any) {
-  const isLayerActive = useStore((state: any) => state.isLayerActive_(props.path))
+  const isLayerActive = useStore((state: any) => state.isLayerActive_(props.path));
 
   let config: myInitialConfigType = {
     editable: props.edit && props.data.layerType === 'texteditor' && isLayerActive,
@@ -89,7 +88,7 @@ export function Editor(props: any) {
     <div
       id="editor-wrapper"
       className={
-        `${props.edit ? 'editable' : ''} relative prose prose-slate prose-p:my-0 prose-headings:mb-4 prose-headings:mt-2`
+        `${props.edit ? 'editable' : ''} ${props.data.fontClass} relative prose prose-slate prose-p:my-0 prose-headings:mb-4 prose-headings:mt-2`
       }
     >
       <LexicalEditor

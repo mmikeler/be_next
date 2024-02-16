@@ -18,7 +18,7 @@ export function Delayer(props: any) {
         repeat: Infinity,
         repeatDelay: 0.5
       }}
-      className="flex w-6 h-6"
+      className="flex w-6 h-6 m-auto"
     >
       <Icon className={`m-auto text-${color} text-${size}`} tag="hourglass_empty" />
     </motion.div>

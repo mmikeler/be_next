@@ -24,11 +24,11 @@ export function LocalStoragePlugin(props: any) {
         })
       }
     },
-    []
+    [layer, upd]
   );
 
   // Задержка перед отправкой текста на сохранение
-  const debouncedSaveContent = debounce(saveContent, 2000);
+  const debouncedSaveContent = debounce(saveContent, 700);
 
   // 
   useEffect(() => {

@@ -7,9 +7,15 @@ import useStore from "@/src/store/store";
 import { fontLibrary } from "@/src/app/fonts";
 import { NextFont } from "next/dist/compiled/@next/font";
 import { getRandomInt } from "../profile/minisites/client";
+import { Custom_Fonts_Library } from "./custom_fonts";
 
 export function FontLib(params: any) {
   const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState(0);
+  const [customFontsList, setCustomFontsList] = useState<any>(null);
+
+  const tabClass = 'text-center p-1 border-b border-amber-500 cursor-pointer';
+  const activeTabClass = 'bg-amber-500 cursor-default';
 
   return (
     <>
@@ -21,15 +27,32 @@ export function FontLib(params: any) {
         <motion.div
           style={{ zIndex: 9999 }}
           animate={{ right: 0 }}
-          className="fixed top-8 -right-60 h-screen w-80 max-w-full bg-stone-700 p-5 pb-20 overflow-y-auto scrollbar">
+          className="fixed top-8 flex flex-col -right-60 h-screen w-80 max-w-full bg-stone-700 p-5 pb-20 overflow-y-auto scrollbar">
           <div className="uppercase">Библиотека шрифтов</div>
-          <p className="text-xs mb-8">Отметьте шрифты, которые хотите использовать на этом сайте</p>
+          <p className="text-xs mb-5">
+            Отметьте шрифты, которые хотите использовать на этом сайте.
+            Мы не рекомендуем использовать более трёх шрифтов для одной страницы.
+          </p>
 
-          {fontLibrary &&
+          {/* Font Tabs */}
+          <div className="grid grid-cols-2 mb-5">
+            <div
+              onClick={() => setTab(0)}
+              className={`${tabClass} ${tab === 0 ? activeTabClass : ''}`}>Google Fonts</div>
+            <div
+              onClick={() => setTab(1)}
+              className={`${tabClass} ${tab === 1 ? activeTabClass : ''}`}>От Авторов</div>
+          </div>
+
+          {/* Google Fonts list */}
+          {(fontLibrary && tab === 0) &&
             fontLibrary.map((font, ind) => {
               return <Font_List_Item key={ind} font={font} />
             })
           }
+
+          {/* Custom fonts list */}
+          {tab === 1 && <Custom_Fonts_Library />}
 
         </motion.div>
       }
@@ -58,7 +81,7 @@ function Font_List_Item({ font }: { font: Font }) {
   }
 
   return (
-    <div className="mb-4">
+    <div className={`mt-4 ${checked ? 'order-1' : 'order-3'}`}>
       <div className="flex items-center">
 
         <input
@@ -88,7 +111,7 @@ function Font_List_Item({ font }: { font: Font }) {
   )
 }
 
-function getPangram(local: string) {
+export function getPangram(local: string) {
   const RU = pangramsRU
   const EN = pangramsEN
   const Symbols = pangramsSymbols

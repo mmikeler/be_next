@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { MiniPanel__Link, Minipanel__Border, Minipanel__Effects, Minipanel__HTML, Minipanel__Size, Minipanel__Text } from "./fields"
+import { MiniPanel__Link, Minipanel__Border, Minipanel__Effects, Minipanel__HTML, Minipanel__Modules_Timer, Minipanel__Size, Minipanel__Text } from "./fields"
 import { motion } from "framer-motion"
 import { Icon } from "@/src/c/ui/icon"
 
@@ -35,6 +35,12 @@ export function Minipanel__Subpanel(props: any) {
           <Minipanel__Effects />
         </Minipanel__Subpanel__Wrapper>)
 
+    case 'module_timer':
+      return (
+        <Minipanel__Subpanel__Wrapper>
+          <Minipanel__Modules_Timer />
+        </Minipanel__Subpanel__Wrapper>)
+
     default:
       return (
         <Minipanel__Subpanel__Wrapper>
@@ -67,8 +73,6 @@ function Minipanel__Subpanel__Wrapper(params: any) {
     })
 
     function close(e: any) {
-      console.log(e.target.closest('.minipanel-subpanel'));
-
       if (e.target.closest('.minipanel-subpanel') == null && !e.target.closest('.ext-mod')) {
         setModElement(null)
       }

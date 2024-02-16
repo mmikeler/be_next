@@ -1,4 +1,4 @@
-import { General__Widget } from "./site_options";
+import { General__Widget } from "../site_options";
 import useStore from "@/src/store/store";
 
 export function General__Style() {
@@ -29,7 +29,7 @@ export function General__Style() {
           </div>
           <label
             htmlFor="general_bgc"
-            className="h-7 block rounded cursor-pointer"
+            className="h-7 block rounded cursor-pointer border"
             style={{ backgroundColor: style.backgroundColor }}>
           </label>
           <input
@@ -51,8 +51,13 @@ export function General__Style() {
             value={style.fontClass}>
             <option value={''}>По-умолчанию</option>
             {
-              Object.values(fonts).map((font: any, ind: number) => {
-                return font && <option key={ind} value={font.set.className}>{font.title}</option>
+              Object.values(fonts.google).map((font: any, ind: number) => {
+                return font && <option key={ind} value={font.set?.className || ''}>{font.title}</option>
+              })
+            }
+            {
+              Object.values(fonts.local).map((font: any, ind: number) => {
+                return font && <option key={ind} value={font.set?.className || ''}>{font.title}</option>
               })
             }
           </select>

@@ -27,6 +27,7 @@ model User {
   sites      Minisite[]
   forms      Form[]
   payments   Payment[]
+  fonts      Font[]
   points     Int        @default(0)
   last_pay   DateTime?
   strikes    Int        @default(0)
@@ -69,4 +70,14 @@ model Payment {
   client      User     @relation(fields: [clientId], references: [email])
   clientId    String
   status      String
+}
+
+model Font {
+  id       Int      @id @default(autoincrement())
+  created  DateTime @default(now())
+  author   User     @relation(fields: [authorId], references: [email])
+  authorId String
+  private  Boolean  @default(false)
+  tags     String
+  url      String
 }

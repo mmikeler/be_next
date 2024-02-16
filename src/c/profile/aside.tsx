@@ -41,6 +41,14 @@ export default function Aside(params: any) {
             path: '/profile/sites',
             title: 'Страницы'
           }} />
+
+        <Aside__Item
+          open={open}
+          options={{
+            icon: 'payment',
+            path: '/profile/payments',
+            title: 'Платежи'
+          }} />
       </Aside__Widget>
 
       <div onClick={() => setOpen(!open)} className="text-stone-100 text-xl bg-slate-700 flex mt-auto py-2 cursor-pointer">
@@ -63,7 +71,7 @@ function Aside__Widget(props: any) {
 }
 
 function Aside__Item(props: any) {
-  const pathname = usePathname()
+  const pathname = usePathname();
   const { icon, path, title } = props.options
   return (
     <div className={`cursor-pointer hover:bg-slate-700 hover:text-slate-100 border-b border-stone-300 ${pathname === path ? ' bg-slate-700 text-slate-100' : ''}`}>

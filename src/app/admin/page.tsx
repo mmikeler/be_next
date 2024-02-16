@@ -13,44 +13,12 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  const user: any = await getUser()
-
-  if (user && user.role == 'Admin' || user.role == 'Superadmin') {
-    const users = await getUsers();
-    return (
-      <>
-        <div className="bg-slate-900 flex items-center p-1 text-white">
-          <Link href={'/'}>
-            <Image
-              src={'/assets/logo.png'}
-              width={40}
-              height={40}
-              alt="miniw3b"
-            />
-          </Link>
-          <div className="mx-auto text-xl">Miniw3b.Admin</div>
-          <LoginBtn />
-        </div>
-        <div className="mx-auto bg-slate-700 text-white overflow-x-auto min-h-screen">
-          <ADMIN__Users users={users} />
-        </div>
-      </>
-    )
-  }
-  else {
-    return 'Доступ запрещён';
-  }
-
-}
-
-async function getUser() {
-  const session: any = await getServerSession()
-
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email }
-  })
-
-  return user
+  const users = await getUsers();
+  return (
+    <>
+      <ADMIN__Users users={users} />
+    </>
+  )
 }
 
 async function getUsers() {

@@ -2,10 +2,11 @@
 
 import { Jost } from 'next/font/google'
 import bg from '../../public/assets/bg.png';
-import { createContext } from 'react';
+import { Suspense, createContext } from 'react';
 import { motion } from 'framer-motion';
 import { Icon } from './ui/icon';
 import { useCurrentUser } from '../hooks/current_user';
+import YM_Metrika from '../ext/metrika';
 
 const font = Jost({ subsets: ['cyrillic', 'latin'], weight: ['400'] })
 
@@ -19,6 +20,11 @@ export default function App(props: any) {
       <body
         style={{ background: `url(${bg.src}) repeat` }}
         className={font.className}>
+
+        <Suspense>
+          <YM_Metrika />
+        </Suspense>
+
         <AppContext.Provider value={props.siteOptions}>
           {props.siteOptions?.maintenance === '1' && user?.role !== 'Superadmin' ? // Сайт закрыт на обслуживание. 1 - да.
 

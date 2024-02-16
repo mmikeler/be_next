@@ -4,6 +4,7 @@ import { Type_Icon } from "./icons";
 import { useState } from "react";
 import { Icon } from "../ui/icon";
 import { Menu__Overlay } from "./main";
+import Modules from "./_modules/modules";
 
 
 export function CreateLayerWidget() {
@@ -24,6 +25,9 @@ export function CreateLayerWidget() {
 
       {/* Изображение */}
       <Gallery />
+
+      {/* Modules */}
+      <Modules />
 
       {/* Другие типы */}
       <Ext />

@@ -1,5 +1,6 @@
 import Moveable, { OnDrag, OnResize, OnRotate } from 'react-moveable';
 import useStore from '@/src/store/store';
+import { parse, stringify } from 'transform-parser';
 
 export function SingleMoveable(params: any) {
   const multyFixed = useStore((state: any) => state.updateLayers_)
@@ -37,6 +38,7 @@ export function SingleMoveable(params: any) {
       useMutationObserver={true}
       throttleDrag={15}
       throttleResize={15}
+      throttleRotate={5}
       checkInput={true}
       origin={false}
       isDisplayGridGuidelines={true}
@@ -66,6 +68,23 @@ export function SingleMoveable(params: any) {
       }: OnResize) => {
         delta[0] && (target!.style.width = `${width}px`);
         delta[1] && (target!.style.height = `${height}px`);
+        //
+        // Далее правки для измененение позиционирования при изменении размера
+        //
+        if (direction[0] < 0) {
+          let transform: any = parse(target!.style.transform);
+          target!.style.transform = stringify({
+            ...transform,
+            translate: [transform.translate[0] - delta[0], transform.translate[1]]
+          });
+        }
+        if (direction[1] < 0) {
+          let transform: any = parse(target!.style.transform);
+          target!.style.transform = stringify({
+            ...transform,
+            translate: [transform.translate[0], transform.translate[1] - delta[1]]
+          });
+        }
       }}
       //
       // Rotate

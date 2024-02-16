@@ -46,3 +46,13 @@ export function Avatar(params: any) {
     <Image fill src={session.user?.image || ''} alt="" />
   )
 }
+
+export function CustomLoginBtn(params: any) {
+  return (
+    <div
+      onClick={() => signIn()}
+      className="uppercase cursor-pointer rounded w-11/12 mt-2 mx-auto bg-sky-500 hover:bg-sky-700 transition-all text-white text-lg p-3 text-center">
+      <span><Icon tag="person_play" /></span> начать творить бесплатно <span><Icon tag="person_play" /></span>
+    </div>
+  )
+}

@@ -54,7 +54,9 @@ export async function PATCH(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const { id, options } = await request.json()
 
-  if (!prisma) return;
+  if (!prisma) {
+    return NextResponse.json({ error: true, errorMessage: 'Ошибка соединения с базой данны.' })
+  };
 
   const result = await prisma.user.update({
     where: {
@@ -63,6 +65,12 @@ export async function POST(request: NextRequest) {
     data: options
   });
 
-  return NextResponse.json({ result })
+  if (result) {
+    return NextResponse.json({ result });
+  }
+  else {
+    return NextResponse.json({ error: true, errorMessage: 'Не удалось обновить данные пользователя.' });
+  }
+
 
 }

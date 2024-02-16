@@ -1,142 +1,96 @@
 "use client"
 
-import { useContext, useState } from "react";
+import { useCallback, useContext } from "react";
 import { MinipanelContext } from "./minipanel";
 import { parseProp } from "@/src/c/profile/minisites/client";
 import useStore from "@/src/store/store"
 import { Icon } from "@/src/c/ui/icon";
-import { parse, stringify } from "transform-parser";
 import { Colorpicker } from "../fields";
+import { Layer } from "../../models/layer";
+import moment from "moment";
+import { debounce } from "lodash";
 
 export function Minipanel__Size() {
-  const layer: any = useContext(MinipanelContext)
-  const upd = useStore((state: any) => state.updateLayer_)
+  const layerCtx: any = useContext(MinipanelContext);
+  const upd = useStore((state: any) => state.updateLayer_);
+  const layer = new Layer(layerCtx, upd);
 
-  if (!layer || !layer?.style) return null
+  const fields = [
+    {
+      label: null,
+      tag: 'width',
+      name: 'width',
+    },
+    {
+      label: null,
+      tag: 'height',
+      name: 'height',
+    },
+    {
+      label: 'x',
+      tag: null,
+      name: 'translateX',
+    },
+    {
+      label: 'y',
+      tag: null,
+      name: 'translateY',
+    },
+    {
+      label: 'z',
+      tag: null,
+      name: 'zIndex',
+    },
+    {
+      label: null,
+      tag: 'rotate_right',
+      name: 'rotate',
+    },
+  ]
 
-  const style = layer.style
-  const transform: any = parse(style.transform)
-
-  const onChangeSize = (e: any) => {
-    upd(layer.id, {
-      ...layer,
-      style: { ...layer.style, [e.target.name]: e.target.value + 'px' }
-    })
+  const onChange = (e: any) => {
+    layer.setCSSProp(e);
   }
 
-  const onChangeZ = (e: any) => {
-    upd(layer.id, {
-      ...layer, style: { ...layer.style, zIndex: e.target.value }
-    })
-  }
-
-  const onChangeR = (e: any) => {
-    const nt = parse(style.transform)
-    nt.rotate = e.target.value + 'deg'
-    upd(layer.id, {
-      ...layer, style: {
-        ...layer.style, transform: stringify(nt)
-      }
-    })
-  }
-
-  const onChangePosition = (e: any, i: number) => {
-    const nt: any = parse(style.transform)
-    nt.translate[i] = e.target.value + 'px'
-    upd(layer.id, {
-      ...layer, style: {
-        ...layer.style, transform: stringify(nt)
-      }
-    })
-  }
+  if (!layer || !layer?.style) return null;
 
   return (
     <div className="grid grid-cols-6 text-xs">
 
-      <label className="flex items-center w-full">
-        <Icon tag="width" />
-        <input
-          onInput={onChangeSize}
-          name="width"
-          className="px-1 bg-white disabled:opacity-50 w-full"
-          type="number"
-          value={parseProp(layer.style.width)} />
-      </label>
-
-      <label className="flex items-center w-full">
-        <Icon tag="height" />
-        <input
-          onInput={onChangeSize}
-          name="height"
-          className="px-1 bg-white disabled:opacity-50 w-full"
-          type="number"
-          value={parseProp(layer.style.height)} />
-      </label>
-
-      <label className="flex items-center w-full">
-        <span>x</span>
-        <input
-          onInput={(e) => onChangePosition(e, 0)}
-          name="left"
-          className="px-1 bg-white disabled:opacity-50 w-full"
-          type="number"
-          value={transform?.translate ? transform.translate[0] : 0} />
-      </label>
-
-      <label className="flex items-center w-full">
-        <span>y</span>
-        <input
-          onInput={(e) => onChangePosition(e, 1)}
-          name="top"
-          className="px-1 bg-white disabled:opacity-50 w-full"
-          type="number"
-          value={transform?.translate ? transform.translate[1] : 0} />
-      </label>
-
-      <label className="flex items-center w-full">
-        <span>z</span>
-        <input
-          onInput={onChangeZ}
-          className="px-1 bg-white disabled:opacity-50 w-full"
-          type="number"
-          value={parseProp(layer.style.zIndex || '0')} />
-      </label>
-
-      <label className="flex items-center">
-        <Icon tag="rotate_right" />
-        <input
-          onInput={onChangeR}
-          className="px-1 bg-white disabled:opacity-50 w-full"
-          type="number"
-          max={360}
-          value={transform?.rotate ? Math.floor(transform.rotate.replace('deg', '')) : 0} />
-      </label>
+      {
+        fields.map((f, i) => {
+          return (
+            <label key={i} className="flex items-center w-full">
+              {f.tag ? <Icon tag={f.tag} /> : <span>{f.label}</span>}
+              <input
+                onInput={onChange}
+                name={f.name}
+                className="px-1 bg-white disabled:opacity-50 w-full"
+                type="number"
+                defaultValue={layer.getProp(f.name)} />
+            </label>
+          )
+        })
+      }
 
     </div>
   )
 }
 
 export function Minipanel__Text(params: any) {
-  const layer: any = useContext(MinipanelContext)
-  const action = useStore((state: any) => state.updateLayer)
+  const layerCtx: any = useContext(MinipanelContext);
+  const upd = useStore((state: any) => state.updateLayer_);
+  const layer = new Layer(layerCtx, upd);
   const fonts = useStore((state: any) => state.fonts)
 
   const onChangeProp = (e: any) => {
-    action({
-      ...layer,
-      style: {
-        ...layer.style,
-        [e.target.name]: e.target.value + (
-          e.target.name.match('lineHeight') || e.target.dataset.unit === '0' ? '' : 'px')
-      }
-    })
+    layer.setCSSProp(e);
   }
 
-  const onChangeFont = (e: any) => {
-    console.log(e.target.dataset)
-    action({
-      ...layer,
-      fontClass: e.target.value
+  const changeFontFamily = (e: any) => {
+    upd(layerCtx.id, {
+      ...layerCtx,
+      [e.target.name]: e.target.value
     })
   }
 
@@ -151,7 +105,7 @@ export function Minipanel__Text(params: any) {
             name="fontSize"
             className="px-1 bg-white disabled:opacity-50  w-full"
             type="number"
-            value={parseProp(layer.style.fontSize)} />
+            defaultValue={layer.getProp('fontSize')} />
         </label>
 
         <label className="flex items-center">
@@ -161,7 +115,7 @@ export function Minipanel__Text(params: any) {
             name="letterSpacing"
             className="px-1 bg-white disabled:opacity-50  w-full"
             type="number"
-            value={parseProp(layer.style.letterSpacing)} />
+            defaultValue={layer.getProp('letterSpacing')} />
         </label>
 
         <label className="flex items-center">
@@ -172,7 +126,7 @@ export function Minipanel__Text(params: any) {
             className="px-1 bg-white disabled:opacity-50 w-full"
             type="number"
             step={0.1}
-            value={layer.style.lineHeight} />
+            defaultValue={layer.getProp('lineHeight')} />
         </label>
 
         <div className="flex items-center">
@@ -190,7 +144,8 @@ export function Minipanel__Text(params: any) {
             onInput={onChangeProp}
             data-unit={'0'}
             className="p-1 rounded bg-stone-100 w-full"
-            value={layer.style.textAlign} name="textAlign">
+            defaultValue={layer.getProp('textAlign')}
+            name="textAlign">
             <option value="left">Слева</option>
             <option value="center">По центру</option>
             <option value="right">Справа</option>
@@ -199,13 +154,20 @@ export function Minipanel__Text(params: any) {
 
         <label className="flex items-center mt-2">
           <select
-            onInput={onChangeFont}
-            name="fontFamily"
+            onInput={changeFontFamily}
+            name="fontClass"
             className="p-1 rounded bg-stone-100 w-full"
-            value={layer.fontClass}>
+            value={layerCtx.fontClass}>
             <option value={'Jost'}>По-умолчанию</option>
             {
-              Object.values(fonts).map((font: any, ind: number) => {
+              fonts?.google &&
+              Object.values(fonts.google).map((font: any, ind: number) => {
+                return font && <option key={ind} value={font.set.className}>{font.title}</option>
+              })
+            }
+            {
+              fonts?.local &&
+              Object.values(fonts.local).map((font: any, ind: number) => {
                 return font && <option key={ind} value={font.set.className}>{font.title}</option>
               })
             }
@@ -218,18 +180,14 @@ export function Minipanel__Text(params: any) {
 }
 
 export function Minipanel__Border(params: any) {
-  const layer: any = useContext(MinipanelContext)
-  const upd = useStore((state: any) => state.updateLayer_)
+  const layerCtx: any = useContext(MinipanelContext)
+  const upd = useStore((state: any) => state.updateLayer_);
+  const layer = new Layer(layerCtx, upd);
 
   if (!layer) return null
 
   const onChange = (e: any) => {
-    upd(layer.id, {
-      ...layer, style: {
-        ...layer.style,
-        [e.target.name]: e.target.value + 'px'
-      }
-    })
+    layer.setCSSProp(e);
   }
 
   return (
@@ -243,7 +201,7 @@ export function Minipanel__Border(params: any) {
           name="borderWidth"
           className="px-1 disabled:opacity-50 w-full"
           type="number"
-          value={parseProp(layer.style.borderWidth)} />
+          value={layer.getProp('borderWidth')} />
       </label>
 
       <label className="flex items-center">
@@ -253,7 +211,7 @@ export function Minipanel__Border(params: any) {
           name="borderRadius"
           className="px-1 disabled:opacity-50 w-full"
           type="number"
-          value={parseProp(layer.style.borderRadius)} />
+          value={layer.getProp('borderRadius')} />
       </label>
 
       <div className="flex items-center">
@@ -313,23 +271,12 @@ export function Minipanel__HTML(params: any) {
 }
 
 export function Minipanel__Effects(params: any) {
-  const layer: any = useContext(MinipanelContext)
-  const upd = useStore((state: any) => state.updateLayer_)
-  const [value, setValue] = useState(layer.style.opacity);
-
-  const fixedCSS = (e: any) => {
-    upd(layer.id, {
-      ...layer, style: { ...layer.style, [e.target.name]: e.target.value }
-    })
-  }
+  const layerCtx: any = useContext(MinipanelContext)
+  const upd = useStore((state: any) => state.updateLayer_);
+  const layer = new Layer(layerCtx, upd);
 
   const change = (e: any) => {
-    const ml = document.getElementById(layer.id)
-    const val = Math.round(e.target.value * 10) / 10
-    if (ml) {
-      ml.style[e.target.name] = val.toString()
-      setValue(val)
-    }
+    layer.setCSSProp(e);
   }
 
   return (
@@ -337,13 +284,158 @@ export function Minipanel__Effects(params: any) {
       <Icon tag={'opacity'} />
       <input
         onInput={change}
-        onBlur={fixedCSS}
         name="opacity"
         className="px-1 disabled:opacity-50 w-full"
         type="number"
         step={0.1}
         max={1}
-        value={value} />
+        value={layer.getProp('opacity')} />
     </label>
+  )
+}
+
+export function Minipanel__Modules_Timer() {
+  const layerCtx: any = useContext(MinipanelContext)
+  const upd = useStore((state: any) => state.updateLayer_);
+  const layer = new Layer(layerCtx, upd);
+  const timer = layer.timer;
+
+  function change(e: any) {
+    upd(layer.id, {
+      ...layer,
+      timer: {
+        ...layer.timer,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  const changeParts = (e: any) => {
+    upd(layer.id, {
+      ...layer,
+      timer: {
+        ...layer.timer,
+        parts: {
+          ...layer.timer.parts,
+          [e.target.name]: e.target.checked
+        }
+      }
+    })
+  }
+
+  const options = [];
+  for (let i = 0; i < 24; i++) {
+    options.push(
+      <option key={i} value={i}>{i}:00</option>
+    )
+  }
+
+  return (
+    <div className="w-full">
+      <div className="flex items-center">
+
+        <label className="flex items-center text-xs text-slate-700 basis-5/12">
+          <input
+            onChange={change}
+            name="date"
+            className="px-1 disabled:opacity-50 w-full bg-stone-100"
+            type="date"
+            value={layer?.timer?.date ? moment(layer.timer.date).format('YYYY-MM-DD') : '0'} />
+        </label>
+
+        <label className="flex items-center text-xs text-slate-700 basis-5/12">
+          <div className="mx-auto flex">
+            <Icon className="text-lg" tag="schedule" />
+            <select
+              onChange={change}
+              className="bg-stone-100"
+              name="time"
+              value={layer.timer.time}>
+              {options}
+            </select>
+          </div>
+        </label>
+
+        <label className="flex items-center text-xs text-slate-700 basis-2/12">
+          <Icon tag="numbers" />
+          <input
+            onChange={change}
+            name="delimeter"
+            className="px-1 disabled:opacity-50 w-full bg-stone-100 text-center"
+            type="text"
+            value={layer?.timer?.delimeter || ':'} />
+        </label>
+
+      </div>
+
+      <div className="m-full text-xs mt-3 flex justify-between">
+        <label className="flex items-center">
+          <span className="me-1">Дни</span>
+          <input
+            onChange={changeParts}
+            className="default-checkbox"
+            type="checkbox"
+            name="days"
+            defaultChecked={timer.parts.days} />
+        </label>
+        <label className="flex items-center">
+          <span className="me-1">Часы</span>
+          <input
+            onChange={changeParts}
+            className="default-checkbox"
+            type="checkbox"
+            name="hours"
+            defaultChecked={timer.parts.hours} />
+        </label>
+        <label className="flex items-center">
+          <span className="me-1">Минуты</span>
+          <input
+            onChange={changeParts}
+            className="default-checkbox"
+            type="checkbox"
+            name="minutes"
+            defaultChecked={timer.parts.minutes} />
+        </label>
+        <label className="flex items-center">
+          <span className="me-1">Секунды</span>
+          <input
+            onChange={changeParts}
+            className="default-checkbox"
+            type="checkbox"
+            name="seconds"
+            defaultChecked={timer.parts.seconds} />
+        </label>
+        <label className="flex items-center">
+          <span className="me-1">Подписи</span>
+          <input
+            onChange={changeParts}
+            className="default-checkbox"
+            type="checkbox"
+            name="text"
+            defaultChecked={timer.parts.text} />
+        </label>
+      </div>
+
+      <label className="block items-center text-xs text-slate-700 w-full mt-3">
+        <div className="text-gray-500">
+          Текст по истечении таймера.
+          <span className="float-right">max: 100</span>
+        </div>
+        <div className="flex">
+          <input
+            onBlur={change}
+            name="endText"
+            maxLength={100}
+            placeholder="Введите текст"
+            className="p-1 disabled:opacity-50 w-full bg-stone-100"
+            type="text"
+            defaultValue={layer?.timer?.endText || 'Уже идёт!'} />
+          <button className="text-xl flex bg-sky-300 text-slate-700 w-8">
+            <Icon className="m-auto" tag="send" />
+          </button>
+        </div>
+      </label>
+
+    </div>
   )
 }

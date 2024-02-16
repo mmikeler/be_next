@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import useStore from "@/src/store/store"
 import { sanitizeHTML } from "@/src/c/profile/minisites/client"
 import { Editor } from "../fields/texteditor/text_editor"
+import { Timer } from "../../ui/timer"
 
 export function Layers(props: any) {
 
@@ -95,6 +96,11 @@ export function LayerComponent(props: any) {
         {layer.layerType === 'image' ?
           <MS_Image className="w-full" path={layer.src} author={author} />
           : null}
+
+        {layer.layerType === 'module_timer' ?
+          <Timer {...props} />
+          : null}
+
       </Wrapper>
     </>
   )
@@ -117,19 +123,22 @@ function Wrapper(params: any) {
         target="_blank"
         className={`cursor-pointer${isLayerActive ? ' lm' : ''}`}
         href={layer.link.href || ''}>
+
         {params.children}
       </Link>
     )
   }
   else {
     return (
-      <div
-        onClick={changeLayer}
-        id={layer.id}
-        style={layer.style}
-        className={`${isLayerActive ? ' lm' : ''} ${params.edit ? 'cursor-move' : null}`}>
-        {params.children}
-      </div>
+      <>
+        <div
+          onClick={changeLayer}
+          id={layer.id}
+          style={layer.style}
+          className={`${isLayerActive ? ' lm' : ''} ${params.edit ? 'cursor-move' : null}`}>
+          {params.children}
+        </div>
+      </>
     )
   }
 }

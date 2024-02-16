@@ -3,6 +3,7 @@ import { random } from "lodash"
 import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 import { auth } from "../auth/[...nextauth]/auth"
+import { Session } from "../../types"
 
 /**
  * Получаем данные сайта
@@ -79,8 +80,10 @@ export const POST = async (request: NextRequest) => {
 export const PATCH = async (request: NextRequest) => {
   const { id, options } = await request.json()
 
-  const session = await auth();
-  if (!prisma || !session) return;
+  const session: any = await auth();
+  if (!prisma || !session) {
+    return NextResponse.json({ error: true, errorMessage: 'Доступ запрещён' });
+  };
 
   // Если изменяется слаг, делаем проверку на уникальность
   if (options?.slug) {
@@ -99,13 +102,26 @@ export const PATCH = async (request: NextRequest) => {
   // 
 
   // Сохраняем данные
-  const result = await prisma.minisite.update({
-    where: {
-      id: id,
-      masterId: session?.user?.email || ""
-    },
-    data: options
-  });
+  let result;
+  if (session?.user?.role === "Superadmin") {
+    // Проводим обновление без проверки автора, когда запрос от superadmin
+    result = await prisma.minisite.update({
+      where: {
+        id: id
+      },
+      data: options
+    });
+  }
+  else {
+    // Проводим обновление с проверкой автора
+    result = await prisma.minisite.update({
+      where: {
+        id: id,
+        masterId: session?.user?.email || ""
+      },
+      data: options
+    });
+  }
 
   return NextResponse.json({ result })
 }

@@ -2,6 +2,8 @@ import Topbar from '@/src/c/topbar'
 import Link from 'next/dist/client/link'
 import { Icon } from '@/src/c/ui/icon'
 import Image from 'next/image'
+import { signIn } from 'next-auth/react';
+import { CustomLoginBtn } from '../c/ui/login-btn';
 
 export default function Home() {
   const btnMod = 'mx-2 text-stone-100 rounded p-1 px-3 transition-all cursor-pointer';
@@ -145,15 +147,15 @@ export default function Home() {
             Примеры работ
           </div>
           <div className="p-3 text-center text-blue-500">
-            <Link className='flex items-center p-2' target='_blank' href="/m/ns_3">
+            <Link className='flex items-center p-2' target='_blank' href="/m/demo_1">
               <Icon className="me-3" tag="open_in_new" />
               Пример страницы 1
             </Link>
-            <Link className='flex items-center p-2' target='_blank' href="/m/ns_4">
+            <Link className='flex items-center p-2' target='_blank' href="/m/demo_2">
               <Icon className="me-3" tag="open_in_new" />
               Пример страницы 2
             </Link>
-            <Link className='flex items-center p-2' target='_blank' href="/m/ns_5">
+            <Link className='flex items-center p-2' target='_blank' href="/m/demo_3">
               <Icon className="me-3" tag="open_in_new" />
               Пример страницы 3
             </Link>
@@ -167,7 +169,7 @@ export default function Home() {
           <Image src={'/assets/bg_2.jpg'} fill={true} alt='miniw3b' />
 
           <div className="z-10 relative">
-            При регистрации в сервисе <br /> до 15 января, Вы получите <br />
+            При регистрации в сервисе <br /> до 15 февраля, Вы получите <br />
             <span className='bg-red-700 px-2'>1000 рублей</span> на счёт.
             <div className="my-4"></div>
             Этого достаточно <br /> для содержания <br />
@@ -180,20 +182,18 @@ export default function Home() {
         </div>
 
         <div className="mt-5 mx-5 text-center text-sm">
-          Ознакомьтесь с <Link className='text-sky-500' target='_blank' href=""> пользовательским соглашением</Link>, чтобы
+          Ознакомьтесь с <Link className='text-sky-500' target='_blank' href="/m/about"> пользовательским соглашением</Link>, чтобы
         </div>
 
-        <div className="uppercase cursor-pointer rounded w-11/12 mt-2 mx-auto bg-sky-500 hover:bg-sky-700 transition-all text-white text-lg p-3 text-center">
-          <span><Icon tag="person_play" /></span> начать творить бесплатно <span><Icon tag="person_play" /></span>
-        </div>
+        <CustomLoginBtn />
 
         <div className="text-stone-400 text-center text-sm">
           Нажав кнопку Вы будете направлены на страницу регистрации, а затем в личный кабинет.
         </div>
 
         <div className="mt-10 text-sm bg-gray-50 px-2 py-5 border-t text-blue-500">
-          <Link className='block mt-2' href="/m/about" target='_blank'>
-            <Icon className="me-3" tag="open_in_new" />
+          <Link className='block mt-2 flex items-center' href="/m/about" target='_blank'>
+            <Icon className="me-1 text-lg" tag="open_in_new" />
             О сервисе
           </Link>
         </div>
