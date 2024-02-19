@@ -91,7 +91,7 @@ export function Minipanel__Single(params: any) {
               onClick={() => setsubPanel('code')}
               title="Вставка кода"
               className={`${mod}`}>
-              <Icon className="text-white hover:mb-1" type="code" />
+              <Icon className="text-white hover:mb-1" tag="code" />
             </div>
             : null
           }
